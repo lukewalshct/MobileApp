@@ -184,9 +184,12 @@
     <Compile Include="App_Start\Startup.MobileApp.cs" />
     <Compile Include="Controllers\HouseholdController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\VoteController.cs" />
     <Compile Include="DataObjects\Household.cs" />
     <Compile Include="DataObjects\HouseholdMember.cs" />
     <Compile Include="DataObjects\User.cs" />
+    <Compile Include="DataObjects\Vote.cs" />
+    <Compile Include="DataObjects\VoteCast.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

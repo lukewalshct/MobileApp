@@ -46,5 +46,6 @@ namespace LWalshFinalAzure.Models
         public System.Data.Entity.DbSet<LWalshFinalAzure.DataObjects.User> Users { get; set; }
         public System.Data.Entity.DbSet<LWalshFinalAzure.DataObjects.Household> Households { get; set; }
         public System.Data.Entity.DbSet<LWalshFinalAzure.DataObjects.HouseholdMember> HouseholdMembers { get; set; }
+        public System.Data.Entity.DbSet<LWalshFinalAzure.DataObjects.Vote> Votes { get; set; }
     }
 }

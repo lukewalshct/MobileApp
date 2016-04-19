@@ -80,16 +80,28 @@ namespace LWalshFinalAzure
                 Id = Guid.NewGuid().ToString(),
                 firstName = "Luke",
                 lastName = "Walsh",
-                IDPUserID = "FB1",
-                household = "HH1"
+                IDPUserID = "FB1"
             };
             User tim = new User
             {
                 Id = Guid.NewGuid().ToString(),
                 firstName = "Tim",
                 lastName = "Burke",
-                IDPUserID = "FB2",
-                household = "HH1"
+                IDPUserID = "FB2"
+            };
+            User eric = new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                firstName = "Eric",
+                lastName = "Puffer",
+                IDPUserID = "FB3"                
+            };
+            User matt = new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                firstName = "Matt",
+                lastName = "Kuruc",
+                IDPUserID = "FB4"
             };
 
             Household hh1 = new Household { Id = Guid.NewGuid().ToString(), name = "Test Household1" };
@@ -125,11 +137,45 @@ namespace LWalshFinalAzure
                 isLandlordVote = false
             };
 
+            HouseholdMember member3 = new HouseholdMember()
+            {
+                userId = eric.Id,
+                householdId = hh1.Id,
+                Id = Guid.NewGuid().ToString(),
+                firstName = eric.firstName,
+                lastName = eric.lastName,
+                status = Status.Approved,
+                karma = 0,
+                isLandlord = false,
+                isApproveVote = false,
+                isEvictVote = false,
+                isLandlordVote = false
+            };
+
+            HouseholdMember member4 = new HouseholdMember()
+            {
+                userId = matt.Id,
+                householdId = hh1.Id,
+                Id = Guid.NewGuid().ToString(),
+                firstName = matt.firstName,
+                lastName = matt.lastName,
+                status = Status.Approved,
+                karma = 0,
+                isLandlord = false,
+                isApproveVote = false,
+                isEvictVote = false,
+                isLandlordVote = false
+            };
+
             me.memberships.Add(member1);
-            tim.memberships.Add(member2);            
+            tim.memberships.Add(member2);
+            eric.memberships.Add(member3);
+            matt.memberships.Add(member4);            
 
             hh1.members.Add(member1);
             hh2.members.Add(member2);
+            hh1.members.Add(member3);
+            hh1.members.Add(member4);
 
             //hh1.users.Add(me);
             //hh2.users.Add(me);
@@ -137,7 +183,9 @@ namespace LWalshFinalAzure
             List<User> users = new List<User>
             {
                 me,  
-                tim
+                tim,
+                eric,
+                matt
             };
             
             foreach (User u in users)
@@ -150,6 +198,21 @@ namespace LWalshFinalAzure
 
             context.Set<Household>().Add(hh1);
             context.Set<Household>().Add(hh2);
+
+            Vote v = new Vote();
+            v.Id = Guid.NewGuid().ToString();
+            v.householdID = hh1.Id;
+            v.membersVoted.Add(member1);
+            v.isAnonymous = false;
+            v.targetMemberID = member1.Id;
+            v.voteType = VoteType.Karma;
+            v.votesFor = 1;
+            v.voteStatus = "Pending";
+            v.balanceChange = -100;
+
+            hh1.votes.Add(v);
+            member1.votes.Add(v);
+            context.Set<Vote>().Add(v);
             //context.SaveChanges();
             base.Seed(context);
         }

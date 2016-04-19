@@ -14,8 +14,6 @@ namespace LWalshFinalAzure.DataObjects
 
         public string IDPUserID { get; set; }
 
-        public string household { get; set; }
-
         public ICollection<HouseholdMember> memberships { get; set; }
 
         public User ()

@@ -19,9 +19,12 @@ namespace LWalshFinalAzure.DataObjects
         public string landlordName { get; set; }
         public ICollection<HouseholdMember> members { get; set; }
 
+        public ICollection<Vote> votes { get; set; }
+
         public Household ()
         {
             this.members = new List<HouseholdMember>();
+            this.votes = new List<Vote>();
         }
     }
 }

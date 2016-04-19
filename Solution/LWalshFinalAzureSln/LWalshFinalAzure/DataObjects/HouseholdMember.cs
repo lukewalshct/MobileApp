@@ -13,7 +13,7 @@ namespace LWalshFinalAzure.DataObjects
 
         public  Status status { get; set; }
 
-        public int karma { get; set; }
+        public double karma { get; set; }
 
         public bool isLandlord { get; set; }
 
@@ -23,6 +23,13 @@ namespace LWalshFinalAzure.DataObjects
         public bool isApproveVote { get; set; }
         public string userId { get; set; }
         public string householdId { get; set; }
+
+        public ICollection<Vote> votes { get; set; }
+
+        public HouseholdMember()
+        {
+            this.votes = new List<Vote>();
+        }
     }
 
     public enum Status { Approved, Declined, Pending }
