@@ -133,3 +133,5 @@ C:\Users\Luke\Documents\CSCI 64 Mobile and Cloud Computing\Homework\Final Projec
 C:\Users\Luke\Documents\CSCI 64 Mobile and Cloud Computing\Homework\Final Project\Solution\LWalshFinalAzureSln\LWalshFinalAzure\bin\zh-Hant\System.Spatial.resources.dll
 C:\Users\Luke\Documents\CSCI 64 Mobile and Cloud Computing\Homework\Final Project\Solution\LWalshFinalAzureSln\LWalshFinalAzure\obj\Debug\LWalshFinalAzure.dll
 C:\Users\Luke\Documents\CSCI 64 Mobile and Cloud Computing\Homework\Final Project\Solution\LWalshFinalAzureSln\LWalshFinalAzure\obj\Debug\LWalshFinalAzure.pdb
+C:\Users\Luke\Documents\CSCI 64 Mobile and Cloud Computing\Homework\Final Project\Solution\LWalshFinalAzureSln\LWalshFinalAzure\bin\Facebook.dll
+C:\Users\Luke\Documents\CSCI 64 Mobile and Cloud Computing\Homework\Final Project\Solution\LWalshFinalAzureSln\LWalshFinalAzure\bin\Facebook.xml
