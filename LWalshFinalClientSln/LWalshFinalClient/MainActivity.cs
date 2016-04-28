@@ -23,7 +23,7 @@ namespace LWalshFinalClient
         {
             base.OnCreate(bundle);
 
-            this.client = new MobileServiceClient();
+            this.client = new MobileServiceClient("https://lwalshfinal.azurewebsites.net/");
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
