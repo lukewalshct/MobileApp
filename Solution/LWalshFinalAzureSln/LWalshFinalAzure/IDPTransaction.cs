@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Facebook;
+using LWalshFinalAzure.DataObjects;
 
 namespace LWalshFinalAzure
 {
@@ -96,5 +97,33 @@ namespace LWalshFinalAzure
 
             return externExtendedUserInfo;
         }        
+        [Authorize]
+        public async Task<Object> getUserFriends()
+        {
+            FacebookCredentials facebookCredentials = null;
+            try
+            {
+                facebookCredentials = await this.User.GetAppServiceIdentityAsync<FacebookCredentials>(this.request);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            if (facebookCredentials != null)
+            {
+                FacebookClient fb = new FacebookClient(facebookCredentials.AccessToken);
+                try
+                {
+                    JsonObject result = await fb.GetTaskAsync("me/friends") as JsonObject;
+                    Friends userFriends = new Friends();
+                    userFriends.friends = (List<FacebookFriend>)result["data"];
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            return null;
+        }
     }
 }

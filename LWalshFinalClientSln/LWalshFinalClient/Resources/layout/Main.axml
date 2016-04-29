@@ -23,4 +23,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/testButton" />
+    <Button
+        android:text="Get Friends"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/getFriendsButton" />
 </LinearLayout>

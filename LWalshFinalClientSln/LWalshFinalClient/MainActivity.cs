@@ -22,6 +22,7 @@ namespace LWalshFinalClient
         Button quitButton;
         Button testButton;
         Button registerButton;
+        Button getFriendsButton;
         bool isLoggedIn;
 
         protected override void OnCreate(Bundle bundle)
@@ -29,6 +30,7 @@ namespace LWalshFinalClient
             base.OnCreate(bundle);
 
             this.client = new MobileServiceClient("https://lwalshfinal.azurewebsites.net/", new HttpAutoProxyHandler());
+            //this.client = new MobileServiceClient("http://localhost:50103/");
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
@@ -39,11 +41,13 @@ namespace LWalshFinalClient
             this.quitButton = FindViewById<Button>(Resource.Id.quitButton);
             this.testButton = FindViewById<Button>(Resource.Id.testButton);
             this.registerButton = FindViewById<Button>(Resource.Id.registerButton);
+            this.getFriendsButton = FindViewById<Button>(Resource.Id.getFriendsButton);
 
             this.loginButton.Click += loginButtonClick;
             this.testButton.Click += getTest;
             this.quitButton.Click += quitClick;
             this.registerButton.Click += registerClick;
+            this.getFriendsButton.Click += getFriendsClick;
 
             this.isLoggedIn = false;
 
@@ -122,6 +126,19 @@ namespace LWalshFinalClient
             }
         }
 
+
+        private async void getFriendsClick(Object sender, EventArgs e)
+        {
+            try
+            {
+                string uri = "user/byid/12345/friends";
+                JToken result = await this.client.InvokeApiAsync(uri, HttpMethod.Get, null);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
         /// <summary>
         /// Quits the app.
         /// </summary>

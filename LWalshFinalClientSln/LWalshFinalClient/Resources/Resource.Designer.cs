@@ -60,6 +60,9 @@ namespace LWalshFinalClient
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f050004
+			public const int getFriendsButton = 2131034116;
+			
 			// aapt resource value: 0x7f050000
 			public const int loginButton = 2131034112;
 			

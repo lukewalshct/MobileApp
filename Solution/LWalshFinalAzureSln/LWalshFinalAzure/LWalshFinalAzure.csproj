@@ -191,6 +191,8 @@
     <Compile Include="Controllers\RegistrationController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VoteController.cs" />
+    <Compile Include="DataObjects\FacebookFriend.cs" />
+    <Compile Include="DataObjects\Friends.cs" />
     <Compile Include="DataObjects\Household.cs" />
     <Compile Include="DataObjects\HouseholdMember.cs" />
     <Compile Include="DataObjects\User.cs" />
