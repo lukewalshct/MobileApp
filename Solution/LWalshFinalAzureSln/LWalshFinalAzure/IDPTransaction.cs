@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Http;
 using Facebook;
 using LWalshFinalAzure.DataObjects;
+using Newtonsoft.Json.Linq;
 
 namespace LWalshFinalAzure
 {
@@ -98,7 +99,7 @@ namespace LWalshFinalAzure
             return externExtendedUserInfo;
         }        
         [Authorize]
-        public async Task<Object> getUserFriends()
+        public async Task<Friends> getUserFriends()
         {
             FacebookCredentials facebookCredentials = null;
             try
@@ -115,8 +116,21 @@ namespace LWalshFinalAzure
                 try
                 {
                     JsonObject result = await fb.GetTaskAsync("me/friends") as JsonObject;
+                    JArray resultFriends = (JArray) result["data"];
+                    List<FacebookFriend> friends = new List<FacebookFriend>();
+
+                    foreach(JToken rFriend in resultFriends)
+                    {
+                        FacebookFriend f = new FacebookFriend();
+                        f.id = (string) rFriend["id"];
+                        f.name = (string) rFriend["name"];
+                        friends.Add(f);
+                    }
+                                       
                     Friends userFriends = new Friends();
-                    userFriends.friends = (List<FacebookFriend>)result["data"];
+                    userFriends.friends = friends;
+
+                    return userFriends;
                 }
                 catch (Exception ex)
                 {
