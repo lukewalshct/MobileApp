@@ -66,6 +66,9 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f050001
 			public const int quitButton = 2131034113;
 			
+			// aapt resource value: 0x7f050002
+			public const int testButton = 2131034114;
+			
 			static Id()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

@@ -11,7 +11,7 @@ using System;
 
 namespace LWalshFinalAzure.Controllers
 {
-    [RoutePrefix("test")]
+   
     public class UserController : TableController<User>
     {
         MobileServiceContext context = new MobileServiceContext();
