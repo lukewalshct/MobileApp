@@ -9,6 +9,11 @@
         android:layout_height="wrap_content"
         android:text="Login" />
     <Button
+        android:text="Register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/registerButton" />
+    <Button
         android:text="Quit"
         android:layout_width="match_parent"
         android:layout_height="42.5dp"

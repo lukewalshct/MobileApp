@@ -9,6 +9,7 @@ using Microsoft.WindowsAzure.MobileServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using System.Linq;
 
 namespace LWalshFinalClient
 {
@@ -20,6 +21,7 @@ namespace LWalshFinalClient
         Button loginButton;
         Button quitButton;
         Button testButton;
+        Button registerButton;
         bool isLoggedIn;
 
         protected override void OnCreate(Bundle bundle)
@@ -36,9 +38,13 @@ namespace LWalshFinalClient
             this.loginButton = FindViewById<Button>(Resource.Id.loginButton);
             this.quitButton = FindViewById<Button>(Resource.Id.quitButton);
             this.testButton = FindViewById<Button>(Resource.Id.testButton);
+            this.registerButton = FindViewById<Button>(Resource.Id.registerButton);
 
-            loginButton.Click += loginButtonClick;
-            testButton.Click += getTest;
+            this.loginButton.Click += loginButtonClick;
+            this.testButton.Click += getTest;
+            this.quitButton.Click += quitClick;
+            this.registerButton.Click += registerClick;
+
             this.isLoggedIn = false;
 
             updateDisplay();
@@ -114,6 +120,54 @@ namespace LWalshFinalClient
             {
 
             }
+        }
+
+        /// <summary>
+        /// Quits the app.
+        /// </summary>
+        /// <param name="sender">The sender object.</param>
+        /// <param name="e">The event arguments.</param>
+        async void quitClick(object sender, EventArgs e)
+        {
+            this.FinishAffinity();
+        }
+
+
+        /// <summary>
+        /// Registers the user with the Azure service if they are logged in.
+        /// </summary>
+        /// <param name="sender">The sender object.</param>
+        /// <param name="e">The event arguments.</param>
+        async void registerClick(object sender, EventArgs e)
+        {
+            string message = "";
+            if (!this.isLoggedIn)
+            {
+                message = "You must login to register.";
+            }
+            else
+            {
+                try
+                {
+                    JToken result = await this.client.InvokeApiAsync("registration", null);
+
+                    if (result.HasValues)
+                    {
+                        message = (string)result.Children().FirstOrDefault().ToString();
+                    }
+                }
+                catch (MobileServiceInvalidOperationException ex)
+                {
+                    message = ex.Message;
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                }
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.SetMessage(message);
+            builder.Create().Show();
         }
     }
 }

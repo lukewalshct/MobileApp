@@ -63,11 +63,14 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f050000
 			public const int loginButton = 2131034112;
 			
-			// aapt resource value: 0x7f050001
-			public const int quitButton = 2131034113;
-			
 			// aapt resource value: 0x7f050002
-			public const int testButton = 2131034114;
+			public const int quitButton = 2131034114;
+			
+			// aapt resource value: 0x7f050001
+			public const int registerButton = 2131034113;
+			
+			// aapt resource value: 0x7f050003
+			public const int testButton = 2131034115;
 			
 			static Id()
 			{
