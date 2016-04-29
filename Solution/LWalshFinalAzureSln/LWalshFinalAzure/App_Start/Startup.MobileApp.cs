@@ -26,6 +26,16 @@ namespace LWalshFinalAzure
                 defaults: new { HHID = RouteParameter.Optional }
             );
             config.Routes.MapHttpRoute(
+                name: "GetUserFriends",
+                routeTemplate: "api/user/byid/{id}/friends",
+                defaults: new { controller = "friend", action = "byid", id = RouteParameter.Optional }
+            );
+            config.Routes.MapHttpRoute(
+                name: "GetUser",
+                routeTemplate: "api/{controller}/byid/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+            config.Routes.MapHttpRoute(
                 name: "HouseholdGetUsersApi",
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { HHID = RouteParameter.Optional }

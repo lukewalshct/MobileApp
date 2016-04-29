@@ -49,6 +49,9 @@ namespace LWalshFinalAzure.Controllers
             return Query();
         }
 
+        [HttpGet]
+        [Route("user/byid/{id}")]
+        [ActionName("byid")]
         // GET tables/User/48D68C86-6EA6-4C25-AA33-223FC9A27959
         public SingleResult<User> GetUser(string id)
         {
@@ -61,6 +64,7 @@ namespace LWalshFinalAzure.Controllers
                 return null;
             }
         }
+
 
         //// PATCH tables/User/48D68C86-6EA6-4C25-AA33-223FC9A27959
         //public Task<User> PatchUser(string id, Delta<User> patch)
