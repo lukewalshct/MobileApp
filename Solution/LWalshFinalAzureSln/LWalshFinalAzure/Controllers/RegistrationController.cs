@@ -46,7 +46,7 @@ namespace LWalshFinalAzure.Controllers
         /// <summary>
         /// HTTP Post method that allows any authenticated user to register. Requires authentication.
         /// </summary>
-        [Authorize]
+        //[Authorize]
         public async Task<HttpResponseMessage> Post()
         {
             IDPTransaction idpTransaction = new IDPTransaction(this.Request, this.ConfigSettings, this.Configuration);
