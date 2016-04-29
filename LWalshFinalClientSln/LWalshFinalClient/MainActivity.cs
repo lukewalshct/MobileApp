@@ -22,7 +22,10 @@ namespace LWalshFinalClient
         Button quitButton;
         Button testButton;
         Button registerButton;
+<<<<<<< HEAD
         Button getFriendsButton;
+=======
+>>>>>>> db5d9b9d24b07777695701953a808c11ba6e6cc4
         bool isLoggedIn;
 
         protected override void OnCreate(Bundle bundle)
@@ -41,13 +44,19 @@ namespace LWalshFinalClient
             this.quitButton = FindViewById<Button>(Resource.Id.quitButton);
             this.testButton = FindViewById<Button>(Resource.Id.testButton);
             this.registerButton = FindViewById<Button>(Resource.Id.registerButton);
+<<<<<<< HEAD
             this.getFriendsButton = FindViewById<Button>(Resource.Id.getFriendsButton);
+=======
+>>>>>>> db5d9b9d24b07777695701953a808c11ba6e6cc4
 
             this.loginButton.Click += loginButtonClick;
             this.testButton.Click += getTest;
             this.quitButton.Click += quitClick;
             this.registerButton.Click += registerClick;
+<<<<<<< HEAD
             this.getFriendsButton.Click += getFriendsClick;
+=======
+>>>>>>> db5d9b9d24b07777695701953a808c11ba6e6cc4
 
             this.isLoggedIn = false;
 
@@ -139,7 +148,7 @@ namespace LWalshFinalClient
 
             }
         }
-        /// <summary>
+
         /// Quits the app.
         /// </summary>
         /// <param name="sender">The sender object.</param>
