@@ -14,7 +14,7 @@ namespace LWalshFinalClient
 {
     class HHListItem
     {
-        public string householdName;
-        public string householdLandlord;
+        public string name;
+        public string landlordName;
     }
 }

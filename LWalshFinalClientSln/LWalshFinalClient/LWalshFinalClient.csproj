@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HHListItem.cs" />
+    <Compile Include="Household.cs" />
     <Compile Include="HttpAutoProxyHandler.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\HHScroll.cs" />

@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Linq;
+using System.Collections.Generic;
+using LWalshFinalClient.Resources;
 
 namespace LWalshFinalClient
 {
@@ -28,6 +30,10 @@ namespace LWalshFinalClient
         bool isMyHHListView;
         bool isHomeScreen;
         string currentUserID;
+        List<HHListItem> HHListItems;
+        ListView householdsListView;
+        TextView HHNameTextView;
+        TextView HHLandlordTextView;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -46,6 +52,9 @@ namespace LWalshFinalClient
             this.createHHButton = FindViewById<Button>(Resource.Id.createHHButton);
             this.registerButton = FindViewById<Button>(Resource.Id.registerButton);
             this.getHHButton = FindViewById<Button>(Resource.Id.getHHButton);
+            this.householdsListView = FindViewById<ListView>(Resource.Id.HHListView);
+            this.HHNameTextView = FindViewById<TextView>(Resource.Id.HHName);
+            this.HHLandlordTextView = FindViewById<TextView>(Resource.Id.HHLandlord);
 
             this.loginButton.Click += loginClick;
             this.createHHButton.Click += createHHClick;
@@ -57,23 +66,31 @@ namespace LWalshFinalClient
             this.isRegistered = false;
             this.isMyHHListView = true;
             this.isHomeScreen = true;
-
+            
             updateDisplay();
         }
 
         private void getHHClick(Object sender, EventArgs e)
         {            
-            updateHouseholdList();
+            updateDisplay();
         }
 
         private void updateDisplay()
         {
             this.loginButton.Text = this.isLoggedIn ? "Logout" : "Login";
             this.registerButton.Visibility = this.isRegistered ? ViewStates.Gone : ViewStates.Visible;
+            this.HHNameTextView.Visibility = ViewStates.Gone;
+            this.HHLandlordTextView.Visibility = ViewStates.Gone;
             //if it's the home screen, retrieve the list of households to which the user belongs
             if (this.isHomeScreen)
             {
+                this.householdsListView.Enabled = true;
                 updateHouseholdList();
+                displayHouseholds();
+            }
+            else
+            {
+                this.householdsListView.Enabled = false;
             }
         }
 
@@ -87,6 +104,26 @@ namespace LWalshFinalClient
                 {
                     string uri = "household/byuser/" + this.currentUserID.Substring(9);
                     JToken result = await this.client.InvokeApiAsync(uri, HttpMethod.Get, null);
+
+                    if(result != null && result.HasValues)
+                    {
+                        List<HHListItem> households = new List<HHListItem>();
+
+                        foreach(var hh in result)
+                        {
+                            HHListItem hhListItem = new HHListItem();
+
+                            //newHH.currencyName = (string)((JObject)hh)["currencyName"];
+                            hhListItem.name = (string)((JObject)hh)["name"];
+                            //newHH.landlordIDP = (string)((JObject)hh)["landlordIDP"];
+                            hhListItem.landlordName = (string)((JObject)hh)["landlordName"];
+                            //newHH.description = (string)((JObject)hh)["description"];
+
+                            households.Add(hhListItem);
+                        }
+
+                        this.HHListItems = households;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -97,6 +134,16 @@ namespace LWalshFinalClient
             else
             {
 
+            }            
+        }
+
+        //if home screen, displays the households
+        private void displayHouseholds()
+        {
+            if (this.HHListItems != null && this.HHListItems.Count > 0)
+            {
+                HHScrollAdapter householdsAdapter = new HHScrollAdapter(this, this.HHListItems);
+                this.householdsListView.Adapter = householdsAdapter;
             }
         }
 

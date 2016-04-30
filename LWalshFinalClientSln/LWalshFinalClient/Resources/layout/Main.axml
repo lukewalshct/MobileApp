@@ -8,6 +8,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/createHHButton" />
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="50.0dp">
+        <ListView
+            android:choiceMode="singleChoice"
+            android:minWidth="25px"
+            android:minHeight="50px"
+            android:layout_width="match_parent"
+            android:layout_height="311.0dp"
+            android:id="@+id/HHListView"
+            android:layout_marginBottom="107.0dp" />
+        <TextView
+            android:text="Household"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/HHName" />
+        <TextView
+            android:text="landlord"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/HHLandlord" />
+    </LinearLayout>
     <Button
         android:id="@+id/loginButton"
         android:layout_width="fill_parent"
