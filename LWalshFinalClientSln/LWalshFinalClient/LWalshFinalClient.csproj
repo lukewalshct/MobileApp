@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="HHListItem.cs" />
     <Compile Include="Household.cs" />
+    <Compile Include="HouseholdActiviy.cs" />
     <Compile Include="HttpAutoProxyHandler.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\HHScroll.cs" />
@@ -87,6 +88,9 @@
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
+    <AndroidResource Include="Resources\layout\Household.axml">
+      <SubType>AndroidResource</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />

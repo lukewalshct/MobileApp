@@ -16,5 +16,6 @@ namespace LWalshFinalClient
     {
         public string name;
         public string landlordName;
+        public string id;
     }
 }

@@ -15,7 +15,7 @@ using LWalshFinalClient.Resources;
 
 namespace LWalshFinalClient
 {
-    [Activity(Label = "LWalshFinalClient", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "Home", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
         public MobileServiceClient client;
@@ -54,7 +54,8 @@ namespace LWalshFinalClient
 
             this.loginButton.Click += loginClick;
             this.createHHButton.Click += createHHClick;
-            this.quitButton.Click += quitClick;            
+            this.quitButton.Click += quitClick;
+            this.householdsListView.ItemClick += householdsListViewItemClick;
 
             this.isLoggedIn = false;
             this.isRegistered = false;
@@ -101,13 +102,11 @@ namespace LWalshFinalClient
                         foreach(var hh in result)
                         {
                             HHListItem hhListItem = new HHListItem();
-
-                            //newHH.currencyName = (string)((JObject)hh)["currencyName"];
-                            hhListItem.name = (string)((JObject)hh)["name"];
-                            //newHH.landlordIDP = (string)((JObject)hh)["landlordIDP"];
+                                                        
+                            hhListItem.name = (string)((JObject)hh)["name"];                            
                             hhListItem.landlordName = (string)((JObject)hh)["landlordName"];
-                            //newHH.description = (string)((JObject)hh)["description"];
-
+                            hhListItem.id = (string)((JObject)hh)["id"];
+                            
                             households.Add(hhListItem);
                         }
 
@@ -293,6 +292,29 @@ namespace LWalshFinalClient
             builder.SetMessage(message);
             builder.Create().Show();
             return false;     
+        }
+
+        private void householdsListViewItemClick(Object sender, AdapterView.ItemClickEventArgs e)
+        {
+            if (this.HHListItems != null && this.HHListItems.Count > 0)
+            {
+                HHListItem item = this.HHListItems[e.Position];
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.SetMessage(item.id);
+                builder.Create().Show();
+                //_taskInfo.SelectionChanged(_taskInfo.TaskList[e.Position]);
+
+                //UpdateEditAreaWithSelectedTask();
+
+                //if (_lastSelectedPosition > -1 && _lastSelectedPosition < _taskItemsListView.Count)
+                //{
+                //    _taskItemsListView.GetChildAt(_lastSelectedPosition).Background = null;
+                //}
+                //_lastSelectedPosition = e.Position;
+                //_taskItemsListView.GetChildAt(e.Position).SetBackgroundColor(Color.BlueViolet);
+                var intent = new Intent(this, typeof(HouseholdActiviy));                
+                StartActivity(intent);
+            }
         }
     }
 }
