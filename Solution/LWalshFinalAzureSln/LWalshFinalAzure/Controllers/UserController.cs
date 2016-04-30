@@ -15,6 +15,7 @@ namespace LWalshFinalAzure.Controllers
     public class UserController : TableController<User>
     {
         MobileServiceContext context = new MobileServiceContext();
+        public MobileAppSettingsDictionary ConfigSettings => Configuration.GetMobileAppSettingsProvider().GetMobileAppSettings();
 
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -65,7 +66,26 @@ namespace LWalshFinalAzure.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("user/byauth")]
+        [ActionName("byauth")]
+        [Authorize]
+        // GET tables/User/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        public async Task<User> GetUserByAuth()
+        {
+            IDPTransaction idpTransaction = new IDPTransaction(this.Request, this.ConfigSettings, this.Configuration);
+            ExtendedUserInfo userInfo = await idpTransaction.GetIDPInfo();
 
+            if (userInfo != null)
+            {
+                return this.context.Users.Where(x => x.IDPUserID == 
+                    userInfo.providerType + ":" + userInfo.IDPUserId).SingleOrDefault();
+            }
+            else
+            {
+                return null;
+            }
+        }
         //// PATCH tables/User/48D68C86-6EA6-4C25-AA33-223FC9A27959
         //public Task<User> PatchUser(string id, Delta<User> patch)
         //{

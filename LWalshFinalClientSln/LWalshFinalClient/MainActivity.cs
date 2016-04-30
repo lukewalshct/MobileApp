@@ -25,6 +25,9 @@ namespace LWalshFinalClient
         Button getFriendsButton;
         bool isLoggedIn;
         bool isRegistered;
+        bool isMyHHListView;
+        bool isHomeScreen;
+        string currentUserID;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -52,6 +55,8 @@ namespace LWalshFinalClient
 
             this.isLoggedIn = false;
             this.isRegistered = false;
+            this.isMyHHListView = false;
+            this.isHomeScreen = true;
 
             updateDisplay();
         }
@@ -60,6 +65,33 @@ namespace LWalshFinalClient
         {
             this.loginButton.Text = this.isLoggedIn ? "Logout" : "Login";
             this.registerButton.Visibility = this.isRegistered ? ViewStates.Gone : ViewStates.Visible;
+            //if it's the home screen, retrieve the list of households to which the user belongs
+            if (this.isHomeScreen)
+            {
+                updateHouseholdList();
+            }
+        }
+
+
+        private async void updateHouseholdList()
+        {
+            //if the user is viewing his/her own households, get households for that user
+            if(this.isMyHHListView)
+            {
+                try
+                {
+                    JToken result = await this.client.InvokeApiAsync("household", HttpMethod.Get, null);
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            //else get the list of households the users friends are a part of but the user is not a member
+            else
+            {
+
+            }
         }
 
         private async void loginClick(Object sender, EventArgs e)
@@ -75,6 +107,7 @@ namespace LWalshFinalClient
                 {
                     this.isLoggedIn = false;
                     this.isRegistered = false;
+                    this.currentUserID = "";
                     await client.LogoutAsync();
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.SetMessage("You are now logged out");
@@ -210,8 +243,10 @@ namespace LWalshFinalClient
 
                     if (result.HasValues)
                     {
-                        message = (string)result.Children().FirstOrDefault().ToString();
+                        //set the current user id for use in future calls
+                        this.currentUserID = (string)result["message"];
                         this.isRegistered = true;
+                        message = "You are registered and may now access your households!";
                     }
                 }
                 catch (MobileServiceInvalidOperationException ex)
@@ -228,6 +263,8 @@ namespace LWalshFinalClient
             builder.Create().Show();
             updateDisplay();
         }
+
+
     }
 }
 

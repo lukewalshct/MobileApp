@@ -63,14 +63,14 @@ namespace LWalshFinalAzure.Controllers
                 if (checkExistUser != null)
                 {
                     return Request.CreateResponse(System.Net.HttpStatusCode.OK,
-                        new { Message = "You are already registered and may now access your households." });
+                        new { Message = newUser.IDPUserID });
                 }
 
                 context.Users.Add(newUser);
                 context.SaveChanges();
 
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK,
-                new { Message = "User " + newUser.IDPUserID + " is now registered!" });
+                new { Message = newUser.IDPUserID });
             }
             return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest,
                 new { Message = "Error with registration. Please try again." });
