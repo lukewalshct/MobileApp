@@ -116,14 +116,14 @@ namespace LWalshFinalAzure
                 try
                 {
                     JsonObject result = await fb.GetTaskAsync("me/friends") as JsonObject;
-                    JArray resultFriends = (JArray) result["data"];
+                    JsonArray resultFriends = (JsonArray) result["data"];
                     List<FacebookFriend> friends = new List<FacebookFriend>();
 
-                    foreach(JToken rFriend in resultFriends)
+                    foreach(var rFriend in resultFriends)
                     {
                         FacebookFriend f = new FacebookFriend();
-                        f.id = (string) rFriend["id"];
-                        f.name = (string) rFriend["name"];
+                        f.id = (string) ((JsonObject)rFriend)["id"];
+                        f.name = (string) ((JsonObject)rFriend)["name"];
                         friends.Add(f);
                     }
                                        

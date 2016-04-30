@@ -20,13 +20,11 @@ namespace LWalshFinalClient
 
         Button loginButton;
         Button quitButton;
-        Button testButton;
+        Button createHHButton;
         Button registerButton;
-<<<<<<< HEAD
         Button getFriendsButton;
-=======
->>>>>>> db5d9b9d24b07777695701953a808c11ba6e6cc4
         bool isLoggedIn;
+        bool isRegistered;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -42,23 +40,18 @@ namespace LWalshFinalClient
             // and attach an event to it
             this.loginButton = FindViewById<Button>(Resource.Id.loginButton);
             this.quitButton = FindViewById<Button>(Resource.Id.quitButton);
-            this.testButton = FindViewById<Button>(Resource.Id.testButton);
+            this.createHHButton = FindViewById<Button>(Resource.Id.createHHButton);
             this.registerButton = FindViewById<Button>(Resource.Id.registerButton);
-<<<<<<< HEAD
             this.getFriendsButton = FindViewById<Button>(Resource.Id.getFriendsButton);
-=======
->>>>>>> db5d9b9d24b07777695701953a808c11ba6e6cc4
 
-            this.loginButton.Click += loginButtonClick;
-            this.testButton.Click += getTest;
+            this.loginButton.Click += loginClick;
+            this.createHHButton.Click += createHHClick;
             this.quitButton.Click += quitClick;
             this.registerButton.Click += registerClick;
-<<<<<<< HEAD
             this.getFriendsButton.Click += getFriendsClick;
-=======
->>>>>>> db5d9b9d24b07777695701953a808c11ba6e6cc4
 
             this.isLoggedIn = false;
+            this.isRegistered = false;
 
             updateDisplay();
         }
@@ -66,9 +59,10 @@ namespace LWalshFinalClient
         private void updateDisplay()
         {
             this.loginButton.Text = this.isLoggedIn ? "Logout" : "Login";
+            this.registerButton.Visibility = this.isRegistered ? ViewStates.Gone : ViewStates.Visible;
         }
 
-        private async void loginButtonClick(Object sender, EventArgs e)
+        private async void loginClick(Object sender, EventArgs e)
         {
             try {
                 if (client.CurrentUser == null || client.CurrentUser.UserId == null)
@@ -80,7 +74,11 @@ namespace LWalshFinalClient
                 else
                 {
                     this.isLoggedIn = false;
+                    this.isRegistered = false;
                     await client.LogoutAsync();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.SetMessage("You are now logged out");
+                    builder.Create().Show();
                 }
             }
             catch(Exception ex)
@@ -135,6 +133,38 @@ namespace LWalshFinalClient
             }
         }
 
+        private async void createHHClick(Object sender, EventArgs e)
+        {
+            string message = "";
+            if (!this.isLoggedIn || !this.isRegistered)
+            {
+                message = "You must be logged in and registered to create a new household.";
+            }
+            else
+            {
+                try
+                {
+                    JToken result = await this.client.InvokeApiAsync("household/create", HttpMethod.Post, null);
+
+                    if (result.HasValues)
+                    {
+                        message = (string)result.Children().FirstOrDefault().ToString();
+                    }
+                }
+                catch (MobileServiceInvalidOperationException ex)
+                {
+                    message = ex.Message;
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                }
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.SetMessage(message);
+            builder.Create().Show();
+            updateDisplay();
+        }
 
         private async void getFriendsClick(Object sender, EventArgs e)
         {
@@ -148,6 +178,7 @@ namespace LWalshFinalClient
 
             }
         }
+        
 
         /// Quits the app.
         /// </summary>
@@ -180,6 +211,7 @@ namespace LWalshFinalClient
                     if (result.HasValues)
                     {
                         message = (string)result.Children().FirstOrDefault().ToString();
+                        this.isRegistered = true;
                     }
                 }
                 catch (MobileServiceInvalidOperationException ex)
@@ -194,6 +226,7 @@ namespace LWalshFinalClient
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.SetMessage(message);
             builder.Create().Show();
+            updateDisplay();
         }
     }
 }

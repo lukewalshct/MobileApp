@@ -62,8 +62,8 @@ namespace LWalshFinalAzure.Controllers
                 User checkExistUser = this.context.Users.Where(x => x.IDPUserID == newUser.IDPUserID).SingleOrDefault();
                 if (checkExistUser != null)
                 {
-                    return Request.CreateResponse(System.Net.HttpStatusCode.Conflict,
-                        new { Message = "User already exists." });
+                    return Request.CreateResponse(System.Net.HttpStatusCode.OK,
+                        new { Message = "You are already registered and may now access your households." });
                 }
 
                 context.Users.Add(newUser);

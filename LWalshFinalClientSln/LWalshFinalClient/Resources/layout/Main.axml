@@ -4,6 +4,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     <Button
+        android:text="Create Household"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createHHButton" />
+    <Button
         android:id="@+id/loginButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -18,11 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="42.5dp"
         android:id="@+id/quitButton" />
-    <Button
-        android:text="Test Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/testButton" />
     <Button
         android:text="Get Friends"
         android:layout_width="match_parent"

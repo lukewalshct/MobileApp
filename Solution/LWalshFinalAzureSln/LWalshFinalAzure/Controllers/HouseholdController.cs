@@ -7,6 +7,8 @@ using LWalshFinalAzure.DataObjects;
 using System;
 using System.Net.Http;
 using System.Net;
+using Microsoft.Azure.Mobile.Server;
+using System.Threading.Tasks;
 
 namespace LWalshFinalAzure.Controllers
 {
@@ -15,6 +17,7 @@ namespace LWalshFinalAzure.Controllers
     public class HouseholdController : ApiController
     {
         MobileServiceContext context = new MobileServiceContext();
+        public MobileAppSettingsDictionary ConfigSettings => Configuration.GetMobileAppSettingsProvider().GetMobileAppSettings();
 
         [HttpGet]
         [Route("household/byuser/{id}")]
@@ -75,44 +78,62 @@ namespace LWalshFinalAzure.Controllers
         [HttpPost]
         [ActionName("create")]
         [Route("household/create")]
-        public HttpResponseMessage CreateHousehold()
+        [Authorize]
+        public async Task<HttpResponseMessage> CreateHousehold()
         {
-            User testCreator = this.context.Users.Where(x => x.IDPUserID == "FB1").First();
+            IDPTransaction idpTransaction = new IDPTransaction(this.Request, this.ConfigSettings, this.Configuration);
+            ExtendedUserInfo userInfo = await idpTransaction.GetIDPInfo();
 
-            Household newHH = new Household();
+            if (userInfo != null)
+            {
+                User creator = this.context.Users.Where(x => x.IDPUserID == (userInfo.providerType + ":" + userInfo.IDPUserId)).SingleOrDefault();
 
-            //create household info
-            newHH.Id = Guid.NewGuid().ToString();
-            newHH.name = "New Household";
-            newHH.landlordIDP = testCreator.IDPUserID; //need to use authenticated user's
-            newHH.landlordName = testCreator.firstName + " " + testCreator.lastName; //need to use authenticated user's
-            newHH.currencyName = "Karma Points"; //default currency name
-            newHH.description = "Welcome to the household!";
+                if (creator == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest,
+                        new { Message = "No matching user registered. Please register and try again." });
+                }
 
-            //create new member (caller)
-            HouseholdMember newMember = new HouseholdMember();
-            newMember.Id = Guid.NewGuid().ToString();
-            newMember.isLandlord = true;
-            newMember.isApproveVote = false;
-            newMember.isEvictVote = false;
-            newMember.isLandlordVote = false;
-            newMember.karma = 0;
-            newMember.firstName = testCreator.firstName;
-            newMember.lastName = testCreator.lastName;
-            newMember.status = Status.Approved;
-            newMember.userId = testCreator.Id;
-            newMember.householdId = newHH.Id;
+                Household newHH = new Household();
 
-            //add relationships
-            testCreator.memberships.Add(newMember);
-            newHH.members.Add(newMember);
+                //create household info
+                newHH.Id = Guid.NewGuid().ToString();
+                newHH.name = "New Household";
+                newHH.landlordIDP = creator.IDPUserID;
+                newHH.landlordName = creator.firstName + " " + creator.lastName;
+                newHH.currencyName = "Karma Points";
+                newHH.description = "Welcome to the household!";
 
-            this.context.Households.Add(newHH);
-            this.context.HouseholdMembers.Add(newMember);
-            this.context.SaveChanges();
+                //create new member (caller)
+                HouseholdMember newMember = new HouseholdMember();
+                newMember.Id = Guid.NewGuid().ToString();
+                newMember.isLandlord = true;
+                newMember.isApproveVote = false;
+                newMember.isEvictVote = false;
+                newMember.isLandlordVote = false;
+                newMember.karma = 0;
+                newMember.firstName = creator.firstName;
+                newMember.lastName = creator.lastName;
+                newMember.status = Status.Approved;
+                newMember.userId = creator.Id;
+                newMember.householdId = newHH.Id;
 
-            return Request.CreateResponse(HttpStatusCode.OK, newHH);
+                //add relationships
+                creator.memberships.Add(newMember);
+                newHH.members.Add(newMember);
 
+                this.context.Households.Add(newHH);
+                this.context.HouseholdMembers.Add(newMember);
+                this.context.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, new {message = "Congratulations! You created a new household " +
+                    "and you are the new landlord! This new household will appear in Your Households list."});
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new
+                    { Message = "Household creation failed. Could not contact authentication IDP" });
+            }
         }
 
         [HttpPost]

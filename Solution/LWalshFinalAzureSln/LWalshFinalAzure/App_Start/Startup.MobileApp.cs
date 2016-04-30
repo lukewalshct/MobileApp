@@ -80,8 +80,8 @@ namespace LWalshFinalAzure
         }
     }
 
-    //public class MobileServiceInitializer : CreateDatabaseIfNotExists<MobileServiceContext>
-    public class MobileServiceInitializer : DropCreateDatabaseAlways<MobileServiceContext>
+    public class MobileServiceInitializer : CreateDatabaseIfNotExists<MobileServiceContext>
+    //public class MobileServiceInitializer : DropCreateDatabaseAlways<MobileServiceContext>
     {
         protected override void Seed(MobileServiceContext context)
         {
