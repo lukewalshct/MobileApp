@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <Button
+        android:text="Household Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/HHInfoButton" />
+    <Button
         android:text="Proposals Under Vote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/votesButton" />
-    <Button
-        android:text="Messages/Notifications"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/messagesButton" />
     <Button
         android:text="Home"
         android:layout_width="match_parent"
