@@ -22,9 +22,7 @@ namespace LWalshFinalClient
 
         Button loginButton;
         Button quitButton;
-        Button createHHButton;
-        Button registerButton;
-        Button getHHButton;
+        Button createHHButton;                
         bool isLoggedIn;
         bool isRegistered;
         bool isMyHHListView;
@@ -49,18 +47,14 @@ namespace LWalshFinalClient
             // and attach an event to it
             this.loginButton = FindViewById<Button>(Resource.Id.loginButton);
             this.quitButton = FindViewById<Button>(Resource.Id.quitButton);
-            this.createHHButton = FindViewById<Button>(Resource.Id.createHHButton);
-            this.registerButton = FindViewById<Button>(Resource.Id.registerButton);
-            this.getHHButton = FindViewById<Button>(Resource.Id.getHHButton);
+            this.createHHButton = FindViewById<Button>(Resource.Id.createHHButton);            
             this.householdsListView = FindViewById<ListView>(Resource.Id.HHListView);
             this.HHNameTextView = FindViewById<TextView>(Resource.Id.HHName);
             this.HHLandlordTextView = FindViewById<TextView>(Resource.Id.HHLandlord);
 
             this.loginButton.Click += loginClick;
             this.createHHButton.Click += createHHClick;
-            this.quitButton.Click += quitClick;
-            this.registerButton.Click += registerClick;
-            this.getHHButton.Click += getHHClick;
+            this.quitButton.Click += quitClick;            
 
             this.isLoggedIn = false;
             this.isRegistered = false;
@@ -70,22 +64,17 @@ namespace LWalshFinalClient
             updateDisplay();
         }
 
-        private void getHHClick(Object sender, EventArgs e)
-        {            
-            updateDisplay();
-        }
-
-        private void updateDisplay()
+        private async void updateDisplay()
         {
             this.loginButton.Text = this.isLoggedIn ? "Logout" : "Login";
-            this.registerButton.Visibility = this.isRegistered ? ViewStates.Gone : ViewStates.Visible;
+            this.householdsListView.Visibility = (this.isLoggedIn && this.isRegistered) ? ViewStates.Visible : ViewStates.Invisible;            
             this.HHNameTextView.Visibility = ViewStates.Gone;
             this.HHLandlordTextView.Visibility = ViewStates.Gone;
             //if it's the home screen, retrieve the list of households to which the user belongs
             if (this.isHomeScreen)
             {
                 this.householdsListView.Enabled = true;
-                updateHouseholdList();
+                await updateHouseholdList();
                 displayHouseholds();
             }
             else
@@ -95,7 +84,7 @@ namespace LWalshFinalClient
         }
 
 
-        private async void updateHouseholdList()
+        private async Task<bool> updateHouseholdList()
         {
             //if the user is viewing his/her own households, get households for that user
             if(this.isMyHHListView)
@@ -134,7 +123,8 @@ namespace LWalshFinalClient
             else
             {
 
-            }            
+            }
+            return true;
         }
 
         //if home screen, displays the households
@@ -155,12 +145,14 @@ namespace LWalshFinalClient
                     MobileServiceAuthenticationProvider providerType = MobileServiceAuthenticationProvider.Facebook;
                     await AuthenticateUserAsync(providerType);
                     this.isLoggedIn = true;
+                    this.isRegistered = await registerUser();
                 }
                 else
                 {
                     this.isLoggedIn = false;
                     this.isRegistered = false;
                     this.currentUserID = "";
+                    this.HHListItems = null;
                     await client.LogoutAsync();
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.SetMessage("You are now logged out");
@@ -183,27 +175,28 @@ namespace LWalshFinalClient
 
             while (client.CurrentUser == null || client.CurrentUser.UserId == null)
             {
-                string message;
+                string errorMessage = "";
 
                 try
                 {
                     // Authenticate using provider type passed in. 
                     await client.LoginAsync(this, providerType);
-
-                    message = "You are now logged in.";
                 }
                 catch (InvalidOperationException ex)
                 {
-                    message = "You must log in. Login Required" + ex.Message;
+                    errorMessage = "You must log in. Login Required" + ex.Message;
                 }
                 catch (Exception ex)
                 {
-                    message = ex.Message;
+                    errorMessage = ex.Message;
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.SetMessage(message);
-                builder.Create().Show();
+                if (errorMessage != "")
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.SetMessage(errorMessage);
+                    builder.Create().Show();
+                }
             }
         }
 
@@ -224,7 +217,7 @@ namespace LWalshFinalClient
             string message = "";
             if (!this.isLoggedIn || !this.isRegistered)
             {
-                message = "You must be logged in and registered to create a new household.";
+                message = "You must be logged in to create a new household.";
             }
             else
             {
@@ -234,7 +227,8 @@ namespace LWalshFinalClient
 
                     if (result.HasValues)
                     {
-                        message = (string)result.Children().FirstOrDefault().ToString();
+                        message = (string)result["message"];
+                        updateDisplay();
                     }
                 }
                 catch (MobileServiceInvalidOperationException ex)
@@ -248,24 +242,9 @@ namespace LWalshFinalClient
             }
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.SetMessage(message);
-            builder.Create().Show();
-            updateDisplay();
-        }
-
-        private async void getFriendsClick(Object sender, EventArgs e)
-        {
-            try
-            {
-                string uri = "user/byid/12345/friends";
-                JToken result = await this.client.InvokeApiAsync(uri, HttpMethod.Get, null);
-            }
-            catch (Exception ex)
-            {
-
-            }
+            builder.Create().Show();            
         }
         
-
         /// Quits the app.
         /// </summary>
         /// <param name="sender">The sender object.</param>
@@ -279,14 +258,13 @@ namespace LWalshFinalClient
         /// <summary>
         /// Registers the user with the Azure service if they are logged in.
         /// </summary>
-        /// <param name="sender">The sender object.</param>
-        /// <param name="e">The event arguments.</param>
-        async void registerClick(object sender, EventArgs e)
+        private async Task<bool> registerUser()
         {
             string message = "";
             if (!this.isLoggedIn)
             {
-                message = "You must login to register.";
+                message = "Login failed, please try again.";
+                return false;
             }
             else
             {
@@ -297,14 +275,14 @@ namespace LWalshFinalClient
                     if (result.HasValues)
                     {
                         //set the current user id for use in future calls
-                        this.currentUserID = (string)result["message"];
-                        this.isRegistered = true;
-                        message = "You are registered and may now access your households!";
+                        this.currentUserID = (string)result["message"];                        
+                        message = "You are logged in and may now access your households!";
+                        return true;
                     }
                 }
                 catch (MobileServiceInvalidOperationException ex)
                 {
-                    message = ex.Message;
+                    message = ex.Message;                    
                 }
                 catch (Exception ex)
                 {
@@ -314,10 +292,8 @@ namespace LWalshFinalClient
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.SetMessage(message);
             builder.Create().Show();
-            updateDisplay();
+            return false;     
         }
-
-
     }
 }
 
