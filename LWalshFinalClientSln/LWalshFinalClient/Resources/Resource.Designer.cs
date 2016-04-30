@@ -64,7 +64,7 @@ namespace LWalshFinalClient
 			public const int createHHButton = 2131034112;
 			
 			// aapt resource value: 0x7f050004
-			public const int getFriendsButton = 2131034116;
+			public const int getHHButton = 2131034116;
 			
 			// aapt resource value: 0x7f050001
 			public const int loginButton = 2131034113;

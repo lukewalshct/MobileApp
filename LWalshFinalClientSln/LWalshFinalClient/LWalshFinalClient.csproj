@@ -72,8 +72,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HHListItem.cs" />
     <Compile Include="HttpAutoProxyHandler.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Resources\HHScroll.cs" />
+    <Compile Include="Resources\HHScrollAdapter.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

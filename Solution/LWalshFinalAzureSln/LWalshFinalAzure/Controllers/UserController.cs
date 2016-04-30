@@ -25,6 +25,9 @@ namespace LWalshFinalAzure.Controllers
         }
 
         // GET tables/User
+        [HttpGet]
+        [Route("user/all")]
+        [ActionName("all")]
         public IQueryable<User> GetAllUser()
         {
             //need to find the user first, get the id, then attach since if we use the actual user

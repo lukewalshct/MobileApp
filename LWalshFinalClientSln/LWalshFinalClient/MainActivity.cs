@@ -22,7 +22,7 @@ namespace LWalshFinalClient
         Button quitButton;
         Button createHHButton;
         Button registerButton;
-        Button getFriendsButton;
+        Button getHHButton;
         bool isLoggedIn;
         bool isRegistered;
         bool isMyHHListView;
@@ -45,20 +45,25 @@ namespace LWalshFinalClient
             this.quitButton = FindViewById<Button>(Resource.Id.quitButton);
             this.createHHButton = FindViewById<Button>(Resource.Id.createHHButton);
             this.registerButton = FindViewById<Button>(Resource.Id.registerButton);
-            this.getFriendsButton = FindViewById<Button>(Resource.Id.getFriendsButton);
+            this.getHHButton = FindViewById<Button>(Resource.Id.getHHButton);
 
             this.loginButton.Click += loginClick;
             this.createHHButton.Click += createHHClick;
             this.quitButton.Click += quitClick;
             this.registerButton.Click += registerClick;
-            this.getFriendsButton.Click += getFriendsClick;
+            this.getHHButton.Click += getHHClick;
 
             this.isLoggedIn = false;
             this.isRegistered = false;
-            this.isMyHHListView = false;
+            this.isMyHHListView = true;
             this.isHomeScreen = true;
 
             updateDisplay();
+        }
+
+        private void getHHClick(Object sender, EventArgs e)
+        {            
+            updateHouseholdList();
         }
 
         private void updateDisplay()
@@ -80,7 +85,8 @@ namespace LWalshFinalClient
             {
                 try
                 {
-                    JToken result = await this.client.InvokeApiAsync("household", HttpMethod.Get, null);
+                    string uri = "household/byuser/" + this.currentUserID.Substring(9);
+                    JToken result = await this.client.InvokeApiAsync(uri, HttpMethod.Get, null);
                 }
                 catch (Exception ex)
                 {

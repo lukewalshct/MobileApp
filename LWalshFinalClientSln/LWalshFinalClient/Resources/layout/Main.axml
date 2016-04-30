@@ -24,8 +24,8 @@
         android:layout_height="42.5dp"
         android:id="@+id/quitButton" />
     <Button
-        android:text="Get Friends"
+        android:text="Get HH Test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/getFriendsButton" />
+        android:id="@+id/getHHButton" />
 </LinearLayout>

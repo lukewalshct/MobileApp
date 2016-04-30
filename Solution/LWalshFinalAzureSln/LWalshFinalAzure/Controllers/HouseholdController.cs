@@ -22,10 +22,20 @@ namespace LWalshFinalAzure.Controllers
         [HttpGet]
         [Route("household/byuser/{id}")]
         [ActionName("byuser")]
-        public List<string> GetUserHouseholds(string id)
+        public List<Household> GetUserHouseholds(string id)
         {
-            return this.context.Households.Where(x => x.members.Select(y => y.userId)
-                .Contains(id)).Select(z => z.Id).ToList();
+            //find the user based on the id
+            User u = this.context.Users.Where(x => x.IDPUserID == ("Facebook:" + id)).SingleOrDefault();
+
+            if (u != null)
+            {
+                return this.context.Households.Include("members").Where(x => x.members.Select(y => y.userId)
+                    .Contains(u.Id)).ToList();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [HttpGet]
