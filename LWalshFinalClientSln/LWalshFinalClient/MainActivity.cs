@@ -61,10 +61,27 @@ namespace LWalshFinalClient
             this.isRegistered = false;
             this.isMyHHListView = true;
             this.isHomeScreen = true;
-            
+
+            //string text = this.Intent.GetStringExtra("MyData") ?? "Data not available";
+            //if the activity was instantiated by an intent with parameters, get the parameters
+            //and initialize the appropriate class variables
+            getIntentParameters();
             updateDisplay();
         }
 
+        private void getIntentParameters()
+        {
+            if (this.Intent.Extras != null)
+            {                
+                var isLoggedInString = this.Intent.Extras.GetString("isLoggedIn");
+                this.currentUserID = this.Intent.Extras.GetString("currentUserID");
+                if (isLoggedInString == "true")
+                {
+                    this.isLoggedIn = true;
+                    this.isRegistered = true;
+                }
+            }
+        }
         private async void updateDisplay()
         {
             this.loginButton.Text = this.isLoggedIn ? "Logout" : "Login";
@@ -312,8 +329,19 @@ namespace LWalshFinalClient
                 //}
                 //_lastSelectedPosition = e.Position;
                 //_taskItemsListView.GetChildAt(e.Position).SetBackgroundColor(Color.BlueViolet);
-                var intent = new Intent(this, typeof(HouseholdActiviy));                
-                StartActivity(intent);
+                //var intent = new Intent(this, typeof(HouseholdActiviy));                
+                //StartActivity(intent);
+                Type activityType = typeof(HouseholdActiviy);
+                Intent newActivity = new Intent(this, activityType);
+                var bundle = new Bundle();
+                bundle.PutString("MyData", "Data from Activity1");
+                bundle.PutString("isLoggedIn", "true");
+                bundle.PutString("currentUserID", this.currentUserID);
+                bundle.PutString("currentHHID", item.id);
+                newActivity.PutExtras(bundle);
+
+                //newActivity.PutExtra("MyData", "Data from Activity1");
+                StartActivity(newActivity);
             }
         }
     }

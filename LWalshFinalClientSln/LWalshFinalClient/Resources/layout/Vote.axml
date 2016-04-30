@@ -7,15 +7,15 @@
         android:text="Household Info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/HHInfoButton" />
+        android:id="@+id/HHInfoButtonVote" />
     <Button
         android:text="Messages/Notifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/messagesButton" />
+        android:id="@+id/messagesButtonVote" />
     <Button
         android:text="Home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/homeButton" />
+        android:id="@+id/homeButtonVote" />
 </LinearLayout>

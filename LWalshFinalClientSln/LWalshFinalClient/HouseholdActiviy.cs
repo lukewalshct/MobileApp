@@ -21,6 +21,8 @@ namespace LWalshFinalClient
         Button homeButton;
         Button votesButton;
         Button messagesButton;
+        string currentUserID;
+        string currentHHID;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -41,11 +43,47 @@ namespace LWalshFinalClient
             this.homeButton.Click += navigationClick;
             this.votesButton.Click += navigationClick;
             this.messagesButton.Click += navigationClick;
+
+            //if the activity was instantiated by an intent with parameters, get the parameters
+            //and initialize the appropriate class variables
+            getIntentParameters();            
+        }
+
+        private void getIntentParameters()
+        {
+            if (this.Intent.Extras != null)
+            {
+                this.currentUserID = this.Intent.Extras.GetString("currentUserID");
+                this.currentHHID = this.Intent.Extras.GetString("currentHHID");
+            }
         }
 
         private void navigationClick(Object sender, EventArgs e)
         {
+            Type activityType = null;
 
+            if (sender == this.homeButton)
+            {
+                activityType = typeof(MainActivity);
+            }
+            else if (sender == this.votesButton)
+            {
+                activityType = typeof(VoteActivity);
+            }
+            else if (sender == this.messagesButton)
+            {
+                activityType = typeof(MessageActivity);
+            }
+            
+            Intent newActivity = new Intent(this, activityType);
+            var bundle = new Bundle();
+            bundle.PutString("MyData", "Data from Activity1");
+            bundle.PutString("isLoggedIn", "true");
+            bundle.PutString("currentUserID", this.currentUserID);
+            newActivity.PutExtras(bundle);
+
+            //newActivity.PutExtra("MyData", "Data from Activity1");
+            StartActivity(newActivity);
         }
     }
 }

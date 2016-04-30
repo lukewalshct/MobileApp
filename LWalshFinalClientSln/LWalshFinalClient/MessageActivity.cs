@@ -40,6 +40,8 @@ namespace LWalshFinalClient
             this.homeButton.Click += navigationClick;
             this.votesButton.Click += navigationClick;
             this.householdInfoButton.Click += navigationClick;
+
+            string text = this.Intent.GetStringExtra("MyData") ?? "Data not available";
         }
 
         private void navigationClick(Object sender, EventArgs e)
