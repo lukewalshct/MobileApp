@@ -3,6 +3,118 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1">
+        <TextView
+            android:text="Household Summary"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/hhSummaryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:text="(editable by landlord only)"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="14.0dp"
+            android:textAlignment="gravity" />
+    </LinearLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="167.0dp"
+        android:id="@+id/tableLayout1">
+        <TableRow
+            android:id="@+id/tableRow1">
+            <TextView
+                android:text="Name:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:id="@+id/dafsas"
+                android:layout_width="90.5dp" />
+            <EditText
+                android:layout_column="1"
+                android:id="@+id/hhNameEditText"
+                android:layout_width="252.5dp" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow2">
+            <TextView
+                android:text="Description:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:id="@+id/asdfas"
+                android:layout_width="101.0dp" />
+            <EditText
+                android:layout_column="1"
+                android:id="@+id/editText1" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow3">
+            <TextView
+                android:text="Currency:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:id="@+id/fasdf" />
+            <EditText
+                android:layout_column="1"
+                android:id="@+id/editText2" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow4">
+            <TextView
+                android:text="Landlord:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:id="@+id/textView13" />
+            <TextView
+                android:text="{Landlord Name}"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="1"
+                android:id="@+id/hhLandlordTextView" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow5">
+            <TextView
+                android:text="Members:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:id="@+id/textView21" />
+        </TableRow>
+    </TableLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="152.0dp"
+        android:layout_marginBottom="50.0dp">
+        <ListView
+            android:choiceMode="singleChoice"
+            android:minWidth="25px"
+            android:minHeight="50px"
+            android:layout_width="match_parent"
+            android:layout_height="150.0dp"
+            android:id="@+id/memberListView"
+            android:layout_marginBottom="107.0dp" />
+        <TextView
+            android:text="Member"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/memberName" />
+        <TextView
+            android:text="Balance"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/memberBalance" />
+    </LinearLayout>
     <Button
         android:text="Proposals Under Vote"
         android:layout_width="match_parent"

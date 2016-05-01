@@ -11,6 +11,8 @@ using Android.Views;
 using Android.Widget;
 using Microsoft.WindowsAzure.MobileServices;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace LWalshFinalClient
 {
@@ -47,9 +49,44 @@ namespace LWalshFinalClient
 
             //if the activity was instantiated by an intent with parameters, get the parameters
             //and initialize the appropriate class variables
-            getIntentParameters();            
+            getIntentParameters();
+            updateDisplay();
         }
 
+        private async void updateDisplay()
+        {
+            await getHousehold();
+        }
+
+        private async Task<bool> getHousehold()
+        {
+            string errorMessage = "";
+            try
+            {
+                JToken result = await this.client.InvokeApiAsync("household/byid/" + this.currentHHID, null);
+
+                if (result.HasValues)
+                {
+                    //set the current user id for use in future calls
+                    this.currentUserID = (string)result["message"];
+                    errorMessage = "You are logged in and may now access your households!";
+                    return true;
+                }
+            }
+            catch (MobileServiceInvalidOperationException ex)
+            {
+                errorMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.SetMessage(errorMessage);
+            builder.Create().Show();
+            return false;
+        }      
+    
         private void getIntentParameters()
         {
             if (this.Intent.Extras != null)
@@ -57,10 +94,10 @@ namespace LWalshFinalClient
                 this.currentUserID = this.Intent.Extras.GetString("currentUserID");
                 this.currentHHID = this.Intent.Extras.GetString("currentHHID");
                 //if the passed client is non-null, use the passed client
-                var clientJson = this.Intent.Extras.GetString("client");                
-                MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
-                if (client != null)
+                var clientJson = this.Intent.Extras.GetString("client");
+                if (clientJson != null)
                 {
+                    MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
                     this.client = client;
                 }
             }
@@ -89,13 +126,14 @@ namespace LWalshFinalClient
             bundle.PutString("isLoggedIn", "true");
             bundle.PutString("currentUserID", this.currentUserID);
             //serialize the mobilserivce client so user data stays intact
-            var clientJson = new JavaScriptSerializer().Serialize(this.client);
-            bundle.PutString("client", clientJson);
+            //var clientJson = new JavaScriptSerializer().Serialize(this.client);
+            //bundle.PutString("client", clientJson);
             newActivity.PutExtras(bundle);
 
 
             //newActivity.PutExtra("MyData", "Data from Activity1");
             StartActivity(newActivity);
         }
+    
     }
 }

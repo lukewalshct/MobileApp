@@ -81,10 +81,10 @@ namespace LWalshFinalClient
                     this.isLoggedIn = true;
                     this.isRegistered = true;
                 }
-                var clientJson = this.Intent.Extras.GetString("client");
-                MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
-                if (client != null)
+                var clientJson = this.Intent.Extras.GetString("client");                
+                if (clientJson != null)
                 {
+                    MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
                     this.client = client;
                 }
             }
@@ -203,7 +203,7 @@ namespace LWalshFinalClient
                 try
                 {
                     // Authenticate using provider type passed in. 
-                    await client.LoginAsync(this, providerType);
+                    await client.LoginAsync(this, providerType);                   
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -348,8 +348,8 @@ namespace LWalshFinalClient
                 bundle.PutString("currentUserID", this.currentUserID);
                 bundle.PutString("currentHHID", item.id);
                 //serialize the mobilserivce client so user data stays intact
-                var clientJson = new JavaScriptSerializer().Serialize(this.client);
-                bundle.PutString("client", clientJson);
+                //string clientJson = new JavaScriptSerializer().Serialize(this.client);
+                //bundle.PutString("client", clientJson);
                 newActivity.PutExtras(bundle);
 
                 //newActivity.PutExtra("MyData", "Data from Activity1");

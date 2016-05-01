@@ -48,7 +48,7 @@ namespace LWalshFinalAzure.Controllers
         [HttpGet]
         [Route("household/byid/{id}")]
         [ActionName("byid")]
-        public Object GetHousehold(string id)
+        public Object GetHouseholdById(string id)
         {
             Household hh = this.context.Households.Where(x => x.Id == id).FirstOrDefault();
 
