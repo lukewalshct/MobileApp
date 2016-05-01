@@ -13,6 +13,7 @@ using Microsoft.WindowsAzure.MobileServices;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace LWalshFinalClient
 {
@@ -26,6 +27,8 @@ namespace LWalshFinalClient
         Button messagesButton;
         string currentUserID;
         string currentHHID;
+        Household currentHousehold;
+        List<HouseholdMember> members;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -63,13 +66,39 @@ namespace LWalshFinalClient
             string errorMessage = "";
             try
             {
-                JToken result = await this.client.InvokeApiAsync("household/byid/" + this.currentHHID, null);
+                JToken result = await this.client.InvokeApiAsync("household/byid/" + this.currentHHID, HttpMethod.Get, null);
 
                 if (result.HasValues)
                 {
-                    //set the current user id for use in future calls
-                    this.currentUserID = (string)result["message"];
-                    errorMessage = "You are logged in and may now access your households!";
+                    //parse the household info and list of members
+                    this.currentHousehold = new Household();
+                                        
+                    this.currentHousehold.name =(string)((JObject)result)["name"];
+                    this.currentHousehold.description = (string)((JObject)result)["description"];
+                    this.currentHousehold.currencyName = (string)((JObject)result)["currencyName"];             
+                    this.currentHousehold.landlordName = (string)((JObject)result)["landlordName"];
+
+                    //parse members
+                    JArray membersJArray = (JArray)((JObject)result)["members"];
+
+                    this.members = new List<HouseholdMember>();
+
+                    foreach(var m in membersJArray)
+                    {
+                        HouseholdMember member = new HouseholdMember();
+
+                        member.firstName = (string)((JObject)m)["firstName"];
+                        member.lastName = (string)((JObject)m)["lastName"];
+                        member.status = (string)((JObject)m)["status"];
+                        member.karma = (double)((JObject)m)["karma"];
+                        member.isLandlord = (bool)((JObject)m)["isLandlord"];
+                        member.isLandlordVote = (bool)((JObject)m)["isLandlordVote"];
+                        member.isEvictVote = (bool)((JObject)m)["isEvictVote"];
+                        member.isApproveVote = (bool)((JObject)m)["isApproveVote"];
+                        member.userId = (string)((JObject)m)["userId"];
+
+                        this.members.Add(member);
+                    }
                     return true;
                 }
             }
