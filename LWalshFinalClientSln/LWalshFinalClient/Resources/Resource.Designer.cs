@@ -84,14 +84,14 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f050005
 			public const int dafsas = 2131034117;
 			
-			// aapt resource value: 0x7f050009
-			public const int editText1 = 2131034121;
-			
-			// aapt resource value: 0x7f05000c
-			public const int editText2 = 2131034124;
-			
 			// aapt resource value: 0x7f05000b
 			public const int fasdf = 2131034123;
+			
+			// aapt resource value: 0x7f05000c
+			public const int hhCurEditText = 2131034124;
+			
+			// aapt resource value: 0x7f050009
+			public const int hhDescEditText = 2131034121;
 			
 			// aapt resource value: 0x7f05000f
 			public const int hhLandlordTextView = 2131034127;

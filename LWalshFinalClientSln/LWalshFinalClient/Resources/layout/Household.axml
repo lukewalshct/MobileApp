@@ -51,7 +51,7 @@
                 android:layout_width="101.0dp" />
             <EditText
                 android:layout_column="1"
-                android:id="@+id/editText1" />
+                android:id="@+id/hhDescEditText" />
         </TableRow>
         <TableRow
             android:id="@+id/tableRow3">
@@ -62,7 +62,7 @@
                 android:id="@+id/fasdf" />
             <EditText
                 android:layout_column="1"
-                android:id="@+id/editText2" />
+                android:id="@+id/hhCurEditText" />
         </TableRow>
         <TableRow
             android:id="@+id/tableRow4">

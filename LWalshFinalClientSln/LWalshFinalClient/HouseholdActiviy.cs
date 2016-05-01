@@ -29,6 +29,11 @@ namespace LWalshFinalClient
         string currentHHID;
         Household currentHousehold;
         List<HouseholdMember> members;
+        HouseholdMember currentMember;
+        EditText hhNameEditText;
+        EditText hhDescriptionEditText;
+        EditText hhCurrencyEditText;
+        TextView hhLandlordTextView;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -45,6 +50,10 @@ namespace LWalshFinalClient
             this.homeButton = FindViewById<Button>(Resource.Id.homeButton);
             this.votesButton = FindViewById<Button>(Resource.Id.votesButton);
             this.messagesButton = FindViewById<Button>(Resource.Id.messagesButton);
+            this.hhNameEditText = FindViewById<EditText>(Resource.Id.hhNameEditText);
+            this.hhDescriptionEditText = FindViewById <EditText>(Resource.Id.hhDescEditText);
+            this.hhCurrencyEditText = FindViewById<EditText>(Resource.Id.hhCurEditText);
+            this.hhLandlordTextView = FindViewById<TextView>(Resource.Id.hhLandlordTextView);
 
             this.homeButton.Click += navigationClick;
             this.votesButton.Click += navigationClick;
@@ -59,6 +68,21 @@ namespace LWalshFinalClient
         private async void updateDisplay()
         {
             await getHousehold();
+            await getCurrentMember();
+            if (this.currentHousehold != null)
+            {
+                this.hhNameEditText.Text = this.currentHousehold.name;
+                this.hhDescriptionEditText.Text = this.currentHousehold.description;
+                this.hhLandlordTextView.Text = this.currentHousehold.landlordName;
+                this.hhCurrencyEditText.Text = this.currentHousehold.currencyName;
+            }
+            else
+            {
+                this.hhNameEditText.Text = "";
+                this.hhDescriptionEditText.Text = "";
+                this.hhLandlordTextView.Text = "";
+                this.hhCurrencyEditText.Text = "";
+            }
         }
 
         private async Task<bool> getHousehold()
@@ -116,6 +140,45 @@ namespace LWalshFinalClient
             return false;
         }      
     
+        private async Task<bool> getCurrentMember()
+        {            
+            string errorMessage = "";
+            try
+            {
+                JToken m = await this.client.InvokeApiAsync("household/byid/" + this.currentHHID +
+                    "/getmember/" + this.currentUserID.Substring(9), HttpMethod.Get, null);
+
+                if (m.HasValues)
+                {
+                    this.currentMember = new HouseholdMember();
+
+                    this.currentMember.firstName = (string)((JObject)m)["firstName"];
+                    this.currentMember.lastName = (string)((JObject)m)["lastName"];
+                    this.currentMember.status = (string)((JObject)m)["status"];
+                    this.currentMember.karma = (double)((JObject)m)["karma"];
+                    this.currentMember.isLandlord = (bool)((JObject)m)["isLandlord"];
+                    this.currentMember.isLandlordVote = (bool)((JObject)m)["isLandlordVote"];
+                    this.currentMember.isEvictVote = (bool)((JObject)m)["isEvictVote"];
+                    this.currentMember.isApproveVote = (bool)((JObject)m)["isApproveVote"];
+                    this.currentMember.userId = (string)((JObject)m)["userId"];
+                    
+                    return true;
+                }
+            }
+            catch (MobileServiceInvalidOperationException ex)
+            {
+                errorMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.SetMessage(errorMessage);
+            builder.Create().Show();
+            return false;
+        }
+
         private void getIntentParameters()
         {
             if (this.Intent.Extras != null)

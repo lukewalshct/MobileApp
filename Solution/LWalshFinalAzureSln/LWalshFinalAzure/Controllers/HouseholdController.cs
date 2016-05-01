@@ -74,7 +74,15 @@ namespace LWalshFinalAzure.Controllers
         [ActionName("getmember")]
         public HouseholdMember GetMember (string HHID, string userID)
         {
-            return this.context.HouseholdMembers.Where(x => x.householdId == HHID && x.userId == userID).SingleOrDefault();
+            User u = this.context.Users.Where(x => x.IDPUserID == "Facebook:" + userID).SingleOrDefault();
+            if (u != null)
+            {
+                return this.context.HouseholdMembers.Where(x => x.householdId == HHID && x.userId == u.Id).SingleOrDefault();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [HttpGet]
