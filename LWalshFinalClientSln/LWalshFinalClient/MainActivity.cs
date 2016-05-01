@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Linq;
 using System.Collections.Generic;
 using LWalshFinalClient.Resources;
+using System.Web.Script.Serialization;
 
 namespace LWalshFinalClient
 {
@@ -79,6 +80,12 @@ namespace LWalshFinalClient
                 {
                     this.isLoggedIn = true;
                     this.isRegistered = true;
+                }
+                var clientJson = this.Intent.Extras.GetString("client");
+                MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
+                if (client != null)
+                {
+                    this.client = client;
                 }
             }
         }
@@ -331,6 +338,8 @@ namespace LWalshFinalClient
                 //_taskItemsListView.GetChildAt(e.Position).SetBackgroundColor(Color.BlueViolet);
                 //var intent = new Intent(this, typeof(HouseholdActiviy));                
                 //StartActivity(intent);
+
+
                 Type activityType = typeof(HouseholdActiviy);
                 Intent newActivity = new Intent(this, activityType);
                 var bundle = new Bundle();
@@ -338,6 +347,9 @@ namespace LWalshFinalClient
                 bundle.PutString("isLoggedIn", "true");
                 bundle.PutString("currentUserID", this.currentUserID);
                 bundle.PutString("currentHHID", item.id);
+                //serialize the mobilserivce client so user data stays intact
+                var clientJson = new JavaScriptSerializer().Serialize(this.client);
+                bundle.PutString("client", clientJson);
                 newActivity.PutExtras(bundle);
 
                 //newActivity.PutExtra("MyData", "Data from Activity1");

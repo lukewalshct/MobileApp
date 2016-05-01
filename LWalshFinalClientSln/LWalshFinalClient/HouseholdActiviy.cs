@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Microsoft.WindowsAzure.MobileServices;
+using System.Web.Script.Serialization;
 
 namespace LWalshFinalClient
 {
@@ -55,6 +56,13 @@ namespace LWalshFinalClient
             {
                 this.currentUserID = this.Intent.Extras.GetString("currentUserID");
                 this.currentHHID = this.Intent.Extras.GetString("currentHHID");
+                //if the passed client is non-null, use the passed client
+                var clientJson = this.Intent.Extras.GetString("client");                
+                MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
+                if (client != null)
+                {
+                    this.client = client;
+                }
             }
         }
 
@@ -80,7 +88,11 @@ namespace LWalshFinalClient
             bundle.PutString("MyData", "Data from Activity1");
             bundle.PutString("isLoggedIn", "true");
             bundle.PutString("currentUserID", this.currentUserID);
+            //serialize the mobilserivce client so user data stays intact
+            var clientJson = new JavaScriptSerializer().Serialize(this.client);
+            bundle.PutString("client", clientJson);
             newActivity.PutExtras(bundle);
+
 
             //newActivity.PutExtra("MyData", "Data from Activity1");
             StartActivity(newActivity);
