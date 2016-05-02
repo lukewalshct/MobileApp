@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -14,6 +13,7 @@ using System.Web.Script.Serialization;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
+using LWalshFinalClient.Resources;
 
 namespace LWalshFinalClient
 {
@@ -34,6 +34,7 @@ namespace LWalshFinalClient
         EditText hhDescriptionEditText;
         EditText hhCurrencyEditText;
         TextView hhLandlordTextView;
+        ListView membersListView;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -54,6 +55,7 @@ namespace LWalshFinalClient
             this.hhDescriptionEditText = FindViewById <EditText>(Resource.Id.hhDescEditText);
             this.hhCurrencyEditText = FindViewById<EditText>(Resource.Id.hhCurEditText);
             this.hhLandlordTextView = FindViewById<TextView>(Resource.Id.hhLandlordTextView);
+            this.membersListView = FindViewById<ListView>(Resource.Id.memberListView);
 
             this.homeButton.Click += navigationClick;
             this.votesButton.Click += navigationClick;
@@ -83,6 +85,7 @@ namespace LWalshFinalClient
                 this.hhLandlordTextView.Text = "";
                 this.hhCurrencyEditText.Text = "";
             }
+            displayMembers();
         }
 
         private async Task<bool> getHousehold()
@@ -195,6 +198,16 @@ namespace LWalshFinalClient
             }
         }
 
+        private void displayMembers()
+        {
+            if (this.members != null && this.members.Count > 0)
+            {        
+                List<MemberListItem> memberListItems = this.members.Select(x =>
+                    new MemberListItem { name = x.firstName, balance = x.karma.ToString() }).ToList();
+                MemberScrollAdapter membersAdapter = new MemberScrollAdapter(this, memberListItems);
+                this.membersListView.Adapter = membersAdapter;
+            }
+        }
         private void navigationClick(Object sender, EventArgs e)
         {
             Type activityType = null;
