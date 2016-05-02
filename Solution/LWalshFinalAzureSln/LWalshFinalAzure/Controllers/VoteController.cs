@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Net;
 using System;
+using Microsoft.Azure.Mobile.Server;
+using System.Threading.Tasks;
 
 namespace LWalshFinalAzure.Controllers
 {
@@ -14,6 +16,7 @@ namespace LWalshFinalAzure.Controllers
     public class VoteController : ApiController
     {
         MobileServiceContext context = new MobileServiceContext();
+        public MobileAppSettingsDictionary ConfigSettings => Configuration.GetMobileAppSettingsProvider().GetMobileAppSettings();
 
         [HttpGet]
         [Route("vote/byhhid/{id}")]
@@ -50,7 +53,7 @@ namespace LWalshFinalAzure.Controllers
         [HttpPost]
         [Route("vote/newvote")]
         [ActionName("newvote")]
-        public HttpResponseMessage NewVote ([FromBody] Vote v)
+        public async Task<HttpResponseMessage> NewVote ([FromBody] Vote v)
         {
             if (v != null)
             {
@@ -59,7 +62,10 @@ namespace LWalshFinalAzure.Controllers
                 if (hh != null)
                 {
                     //check to ensure calling and target household members exist and is part of the household
-                    User u = this.context.Users.Where(x => x.IDPUserID == "FB1").SingleOrDefault(); //need to replace with FB auth
+                    IDPTransaction idpTransaction = new IDPTransaction(this.Request, this.ConfigSettings, this.Configuration);
+                    ExtendedUserInfo userInfo = await idpTransaction.GetIDPInfo();
+
+                    User u = this.context.Users.Where(x => x.IDPUserID == userInfo.IDPUserId).SingleOrDefault(); 
                     HouseholdMember callMember = null;
                     HouseholdMember targetMember = null;
                     if (u != null)
@@ -138,7 +144,8 @@ namespace LWalshFinalAzure.Controllers
         [HttpPost]
         [Route("vote/castvote")]
         [ActionName("castvote")]
-        public HttpResponseMessage CastVote([FromBody] VoteCast vc)
+        [Authorize]
+        public async Task<HttpResponseMessage> CastVote([FromBody] VoteCast vc)
         {
             //check to ensure votecast is not null
             if (vc == null)
@@ -146,7 +153,10 @@ namespace LWalshFinalAzure.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Denied. Cannot pass a null value" });
             }
 
-            User u = this.context.Users.Where(x => x.IDPUserID == "FB3").SingleOrDefault(); //need to replace with FB auth
+            IDPTransaction idpTransaction = new IDPTransaction(this.Request, this.ConfigSettings, this.Configuration);
+            ExtendedUserInfo userInfo = await idpTransaction.GetIDPInfo();
+
+            User u = this.context.Users.Where(x => x.IDPUserID == userInfo.IDPUserId).SingleOrDefault(); 
             Vote v = this.context.Votes.Include("membersVoted").Where(x => x.Id == vc.voteId).SingleOrDefault();
 
             //check to ensure the vote exists

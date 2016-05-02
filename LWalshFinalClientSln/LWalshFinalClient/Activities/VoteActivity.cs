@@ -14,6 +14,7 @@ using System.Web.Script.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using LWalshFinalClient.Data_Models;
 
 namespace LWalshFinalClient
 {
@@ -119,11 +120,83 @@ namespace LWalshFinalClient
             updateDisplay();
         }
 
-        private void submitClick(Object sender, EventArgs e)
-        {
-            this.isProposingVote = false;
-            updateDisplay();
+        private async void submitClick(Object sender, EventArgs e)
+        {            
+            bool submitSuccess = await submitVote();
+            if (submitSuccess)
+            {
+                this.isProposingVote = false;
+                updateDisplay();
+            }
         }
+
+        private async Task<bool> submitVote()
+        {
+            string message = "";
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            string targetMember = this.memberSpinner.SelectedItem.ToString();
+            string balanceChange = this.balanceChangeEditText.Text;
+            string description = this.descriptionTextEditText.Text;
+            bool isAnonymous = this.proposeAnonCheckBox.Checked;
+            
+            //check to make sure we have the necessary info
+            if (targetMember == null || targetMember == "")
+            {
+                message = "Please select a member to submit the vote";
+            }
+            else if (balanceChange == null || balanceChange == "" || balanceChange == "-")
+            {
+                message = "Please enter a valid amount for the proposed balance change";
+            }
+            else
+            {
+                try
+                {
+                    NewVote vote = new NewVote();
+
+                    vote.targetMemberID = this.members.Where(x => x.firstName == targetMember).Single().userId;
+                    vote.balanceChange = int.Parse(balanceChange);
+                    vote.description = description;
+                    vote.householdID = this.currentHHID;
+                    vote.isAnonymous = isAnonymous;
+
+                    JToken payload = JObject.FromObject(vote);
+                    JToken result = await this.client.InvokeApiAsync("vote/newvote", payload);
+
+                    if (result.HasValues)
+                    {
+                        message = "Successfully submitted proposal! The vote will now appear in the household's" +
+                            "vote list to all household members.";
+                        //reset fields for next vote
+                        this.balanceChangeEditText.Text = "";
+                        this.descriptionTextEditText.Text = "";
+                        this.proposeAnonCheckBox.Checked = false;
+                        return true;                        
+                    }
+                }
+                catch (MobileServiceInvalidOperationException ex)
+                {
+                    message = ex.Message;
+                    builder.SetMessage(message);
+                    builder.Create().Show();
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                    builder.SetMessage(message);
+                    builder.Create().Show();
+                    return false;
+                }                
+                builder.SetMessage(message);
+                return true;
+            }            
+            builder.SetMessage(message);
+            builder.Create().Show();
+            return false;
+        }
+
         private void cancelClick(Object sender, EventArgs e)
         {
             this.isProposingVote = false;
