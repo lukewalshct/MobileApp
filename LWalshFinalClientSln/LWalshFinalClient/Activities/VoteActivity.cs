@@ -11,6 +11,9 @@ using Android.Views;
 using Android.Widget;
 using Microsoft.WindowsAzure.MobileServices;
 using System.Web.Script.Serialization;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using System.Net.Http;
 
 namespace LWalshFinalClient
 {
@@ -36,6 +39,9 @@ namespace LWalshFinalClient
         TextView memberNameTextView;
         TextView voteTypeTextView;
         bool isProposingVote;
+        Household currentHousehold;
+        List<HouseholdMember> members;
+        HouseholdMember currentMember;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -77,8 +83,15 @@ namespace LWalshFinalClient
             updateDisplay();
         }
 
-        private void updateDisplay()
+        private async void updateDisplay()
         {
+            //only refresh members list if a new proposal is being edited
+            if (this.isProposingVote)
+            {
+                await getHousehold();
+                await getCurrentMember();
+                setMemberSpinnerDropdown();
+            }
             this.proposeTableLayout.Visibility = this.isProposingVote ? ViewStates.Visible : ViewStates.Gone;
             this.submitButtonsLayout.Visibility = this.isProposingVote ? ViewStates.Visible : ViewStates.Gone;
             this.proposeAnonCheckBox.Visibility = this.isProposingVote ? ViewStates.Visible : ViewStates.Gone;
@@ -147,6 +160,108 @@ namespace LWalshFinalClient
 
             //newActivity.PutExtra("MyData", "Data from Activity1");
             StartActivity(newActivity);
+        }
+
+        private async Task<bool> getHousehold()
+        {
+            string errorMessage = "";
+            try
+            {
+                JToken result = await this.client.InvokeApiAsync("household/byid/" + this.currentHHID, HttpMethod.Get, null);
+
+                if (result.HasValues)
+                {
+                    //parse the household info and list of members
+                    this.currentHousehold = new Household();
+
+                    this.currentHousehold.name = (string)((JObject)result)["name"];
+                    this.currentHousehold.description = (string)((JObject)result)["description"];
+                    this.currentHousehold.currencyName = (string)((JObject)result)["currencyName"];
+                    this.currentHousehold.landlordName = (string)((JObject)result)["landlordName"];
+
+                    //parse members
+                    JArray membersJArray = (JArray)((JObject)result)["members"];
+
+                    this.members = new List<HouseholdMember>();
+
+                    foreach (var m in membersJArray)
+                    {
+                        HouseholdMember member = new HouseholdMember();
+
+                        member.firstName = (string)((JObject)m)["firstName"];
+                        member.lastName = (string)((JObject)m)["lastName"];
+                        member.status = (string)((JObject)m)["status"];
+                        member.karma = (double)((JObject)m)["karma"];
+                        member.isLandlord = (bool)((JObject)m)["isLandlord"];
+                        member.isLandlordVote = (bool)((JObject)m)["isLandlordVote"];
+                        member.isEvictVote = (bool)((JObject)m)["isEvictVote"];
+                        member.isApproveVote = (bool)((JObject)m)["isApproveVote"];
+                        member.userId = (string)((JObject)m)["userId"];
+
+                        this.members.Add(member);
+                    }
+                    return true;
+                }
+            }
+            catch (MobileServiceInvalidOperationException ex)
+            {
+                errorMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.SetMessage(errorMessage);
+            builder.Create().Show();
+            return false;
+        }
+
+        private async Task<bool> getCurrentMember()
+        {
+            string errorMessage = "";
+            try
+            {
+                JToken m = await this.client.InvokeApiAsync("household/byid/" + this.currentHHID +
+                    "/getmember/" + this.currentUserID.Substring(9), HttpMethod.Get, null);
+
+                if (m.HasValues)
+                {
+                    this.currentMember = new HouseholdMember();
+
+                    this.currentMember.firstName = (string)((JObject)m)["firstName"];
+                    this.currentMember.lastName = (string)((JObject)m)["lastName"];
+                    this.currentMember.status = (string)((JObject)m)["status"];
+                    this.currentMember.karma = (double)((JObject)m)["karma"];
+                    this.currentMember.isLandlord = (bool)((JObject)m)["isLandlord"];
+                    this.currentMember.isLandlordVote = (bool)((JObject)m)["isLandlordVote"];
+                    this.currentMember.isEvictVote = (bool)((JObject)m)["isEvictVote"];
+                    this.currentMember.isApproveVote = (bool)((JObject)m)["isApproveVote"];
+                    this.currentMember.userId = (string)((JObject)m)["userId"];
+
+                    return true;
+                }
+            }
+            catch (MobileServiceInvalidOperationException ex)
+            {
+                errorMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.SetMessage(errorMessage);
+            builder.Create().Show();
+            return false;
+        }
+
+        private void setMemberSpinnerDropdown()
+        {
+            string[] memberNames = this.members.Select(x => x.firstName).ToArray();
+            var spinnerAdapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleSpinnerItem, memberNames);
+            spinnerAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            this.memberSpinner.Adapter = spinnerAdapter;
         }
     }
 }
