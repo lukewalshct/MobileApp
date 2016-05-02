@@ -323,22 +323,6 @@ namespace LWalshFinalClient
             if (this.HHListItems != null && this.HHListItems.Count > 0)
             {
                 HHListItem item = this.HHListItems[e.Position];
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.SetMessage(item.id);
-                builder.Create().Show();
-                //_taskInfo.SelectionChanged(_taskInfo.TaskList[e.Position]);
-
-                //UpdateEditAreaWithSelectedTask();
-
-                //if (_lastSelectedPosition > -1 && _lastSelectedPosition < _taskItemsListView.Count)
-                //{
-                //    _taskItemsListView.GetChildAt(_lastSelectedPosition).Background = null;
-                //}
-                //_lastSelectedPosition = e.Position;
-                //_taskItemsListView.GetChildAt(e.Position).SetBackgroundColor(Color.BlueViolet);
-                //var intent = new Intent(this, typeof(HouseholdActiviy));                
-                //StartActivity(intent);
-
 
                 Type activityType = typeof(HouseholdActiviy);
                 Intent newActivity = new Intent(this, activityType);

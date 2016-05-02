@@ -4,6 +4,100 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <Button
+        android:text="Propose a New Vote!"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/proposalButton" />
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/proposeVoteTable">
+        <TableRow
+            android:id="@+id/tableRow1">
+            <TextView
+                android:text="Member: "
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/mediumText"
+                android:layout_column="0" />
+            <Spinner
+                android:id="@+id/memberSpinner"
+                android:layout_column="1"
+                android:layout_width="224.5dp" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow2">
+            <TextView
+                android:text="Balance Change:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:id="@+id/textView9" />
+            <EditText
+                android:inputType="numberSigned"
+                android:layout_column="1"
+                android:id="@+id/balanceChangeEditText"
+                android:layout_width="220.0dp" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRow3">
+            <TextView
+                android:text="Description:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
+                android:id="@+id/textView12" />
+            <EditText
+                android:layout_column="1"
+                android:id="@+id/descriptionEditText" />
+        </TableRow>
+        <CheckBox
+            android:text="Submit Anonymously"
+            android:id="@+id/anonCheckBox" />
+    </TableLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="152.0dp"
+        android:layout_marginBottom="50.0dp">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/submitLayout">
+            <Button
+                android:text="Cancel"
+                android:layout_width="175.0dp"
+                android:layout_height="38.0dp"
+                android:id="@+id/cancelButton" />
+            <Button
+                android:text="Submit Vote"
+                android:layout_width="175.0dp"
+                android:layout_height="38.0dp"
+                android:id="@+id/submitButton" />
+        </LinearLayout>
+        <ListView
+            android:choiceMode="singleChoice"
+            android:minWidth="25px"
+            android:minHeight="50px"
+            android:layout_width="match_parent"
+            android:layout_height="340.5dp"
+            android:id="@+id/voteListView"
+            android:layout_marginBottom="107.0dp" />
+        <TextView
+            android:text="Member"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/memberName" />
+        <TextView
+            android:text="VoteType"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/voteType" />
+    </LinearLayout>
+    <Button
         android:text="Household Info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

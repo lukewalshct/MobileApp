@@ -203,7 +203,8 @@ namespace LWalshFinalClient
             if (this.members != null && this.members.Count > 0)
             {        
                 List<MemberListItem> memberListItems = this.members.Select(x =>
-                    new MemberListItem { name = x.firstName, balance = x.karma.ToString() }).ToList();
+                    new MemberListItem { name = x.firstName, balance = 
+                    this.currentHousehold.currencyName + ": " + x.karma.ToString() }).ToList();
                 MemberScrollAdapter membersAdapter = new MemberScrollAdapter(this, memberListItems);
                 this.membersListView.Adapter = membersAdapter;
             }
@@ -226,10 +227,10 @@ namespace LWalshFinalClient
             }
             
             Intent newActivity = new Intent(this, activityType);
-            var bundle = new Bundle();
-            bundle.PutString("MyData", "Data from Activity1");
+            var bundle = new Bundle();            
             bundle.PutString("isLoggedIn", "true");
             bundle.PutString("currentUserID", this.currentUserID);
+            bundle.PutString("currentHHID", this.currentHHID);
             //serialize the mobilserivce client so user data stays intact
             //var clientJson = new JavaScriptSerializer().Serialize(this.client);
             //bundle.PutString("client", clientJson);
