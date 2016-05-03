@@ -96,6 +96,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/voteType" />
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+            <TextView
+                android:text="StatusLabel"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textOutput"
+                android:layout_marginRight="11.6dp" />
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/taskCompletedToggleButton"
+                android:textOn="CompletedToggleOn"
+                android:textOff="CompletedToggleOff"
+                android:editable="true" />
+        </LinearLayout>
     </LinearLayout>
     <Button
         android:text="Household Info"
