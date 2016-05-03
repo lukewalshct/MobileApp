@@ -16,12 +16,37 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginBottom="50.0dp">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/hhSwitchLayout">
+            <TextView
+                android:text="My Households"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="115.5dp"
+                android:layout_height="match_parent"
+                android:id="@+id/textView1" />
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/whichHHSwitch"
+                android:textOff=" "
+                android:textOn=" " />
+            <TextView
+                android:text="Friends' Households"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="144.0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/textView2"
+                android:layout_marginLeft="15.5dp" />
+        </LinearLayout>
         <ListView
             android:choiceMode="singleChoice"
             android:minWidth="25px"
             android:minHeight="50px"
             android:layout_width="match_parent"
-            android:layout_height="402.0dp"
+            android:layout_height="378.5dp"
             android:id="@+id/HHListView"
             android:layout_marginBottom="107.0dp" />
         <TextView

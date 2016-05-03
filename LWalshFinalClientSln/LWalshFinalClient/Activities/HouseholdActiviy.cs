@@ -35,6 +35,7 @@ namespace LWalshFinalClient
         EditText hhCurrencyEditText;
         TextView hhLandlordTextView;
         ListView membersListView;
+        bool isMember;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -70,7 +71,7 @@ namespace LWalshFinalClient
         private async void updateDisplay()
         {
             await getHousehold();
-            await getCurrentMember();
+            this.isMember = await getCurrentMember();
             if (this.currentHousehold != null)
             {
                 this.hhNameEditText.Text = this.currentHousehold.name;
@@ -86,6 +87,16 @@ namespace LWalshFinalClient
                 this.hhCurrencyEditText.Text = "";
             }
             displayMembers();
+            if (this.isMember)
+            {
+                this.votesButton.Clickable = true;
+                this.messagesButton.Clickable = true;                                
+            }
+            else
+            {
+                this.votesButton.Clickable = false;
+                this.messagesButton.Clickable = false;
+            }
         }
 
         private async Task<bool> getHousehold()
@@ -167,6 +178,12 @@ namespace LWalshFinalClient
                     
                     return true;
                 }
+                else
+                {
+                    errorMessage = "You are not a member of this household. To request to be a part of " +
+                        "this household, please click the 'Join Household' button (the household will then " +
+                        "vote on your membership).";
+                }
             }
             catch (MobileServiceInvalidOperationException ex)
             {
@@ -176,9 +193,12 @@ namespace LWalshFinalClient
             {
                 errorMessage = ex.Message;
             }
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.SetMessage(errorMessage);
-            builder.Create().Show();
+            if (errorMessage == "")
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.SetMessage(errorMessage);
+                builder.Create().Show();
+            }
             return false;
         }
 

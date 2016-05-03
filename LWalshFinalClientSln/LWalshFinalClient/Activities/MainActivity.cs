@@ -25,14 +25,15 @@ namespace LWalshFinalClient
         Button quitButton;
         Button createHHButton;                
         bool isLoggedIn;
-        bool isRegistered;
-        bool isMyHHListView;
+        bool isRegistered;        
         bool isHomeScreen;
         string currentUserID;
         List<HHListItem> HHListItems;
         ListView householdsListView;
         TextView HHNameTextView;
         TextView HHLandlordTextView;
+        Switch friendsHHSwitch;
+        LinearLayout hhSwitchLayout;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -52,15 +53,17 @@ namespace LWalshFinalClient
             this.householdsListView = FindViewById<ListView>(Resource.Id.HHListView);
             this.HHNameTextView = FindViewById<TextView>(Resource.Id.HHName);
             this.HHLandlordTextView = FindViewById<TextView>(Resource.Id.HHLandlord);
+            this.friendsHHSwitch = FindViewById<Switch>(Resource.Id.whichHHSwitch);
+            this.hhSwitchLayout = FindViewById<LinearLayout>(Resource.Id.hhSwitchLayout);
 
             this.loginButton.Click += loginClick;
             this.createHHButton.Click += createHHClick;
             this.quitButton.Click += quitClick;
             this.householdsListView.ItemClick += householdsListViewItemClick;
+            this.friendsHHSwitch.CheckedChange += friendsHHSwitchChange;            
 
             this.isLoggedIn = false;
-            this.isRegistered = false;
-            this.isMyHHListView = true;
+            this.isRegistered = false;            
             this.isHomeScreen = true;
 
             //string text = this.Intent.GetStringExtra("MyData") ?? "Data not available";
@@ -81,7 +84,8 @@ namespace LWalshFinalClient
                     this.isLoggedIn = true;
                     this.isRegistered = true;
                 }
-                this.client.CurrentUser.UserId = this.Intent.Extras.GetString("clientUserID");
+                string clientUserID = this.Intent.Extras.GetString("clientUserID");
+                this.client.CurrentUser = new MobileServiceUser(clientUserID);
                 this.client.CurrentUser.MobileServiceAuthenticationToken = this.Intent.Extras.GetString("clientAuthToken");
                 //var clientJson = this.Intent.Extras.GetString("client");                
                 //if (clientJson != null)
@@ -94,27 +98,21 @@ namespace LWalshFinalClient
         private async void updateDisplay()
         {
             this.loginButton.Text = this.isLoggedIn ? "Logout" : "Login";
-            this.householdsListView.Visibility = (this.isLoggedIn && this.isRegistered) ? ViewStates.Visible : ViewStates.Invisible;            
+            this.householdsListView.Visibility = (this.isLoggedIn && this.isRegistered) ? ViewStates.Visible : ViewStates.Invisible;
+            this.hhSwitchLayout.Visibility = (this.isLoggedIn && this.isRegistered) ? ViewStates.Visible : ViewStates.Invisible;
             this.HHNameTextView.Visibility = ViewStates.Gone;
             this.HHLandlordTextView.Visibility = ViewStates.Gone;
-            //if it's the home screen, retrieve the list of households to which the user belongs
-            if (this.isHomeScreen)
-            {
-                this.householdsListView.Enabled = true;
-                await updateHouseholdList();
-                displayHouseholds();
-            }
-            else
-            {
-                this.householdsListView.Enabled = false;
-            }
+            this.householdsListView.Enabled = true;
+            await updateHouseholdList();
+            displayHouseholds();
         }
 
 
         private async Task<bool> updateHouseholdList()
         {
+            this.HHListItems = null;
             //if the user is viewing his/her own households, get households for that user
-            if(this.isMyHHListView)
+            if(!this.friendsHHSwitch.Checked)
             {
                 try
                 {
@@ -147,7 +145,33 @@ namespace LWalshFinalClient
             //else get the list of households the users friends are a part of but the user is not a member
             else
             {
+                try
+                {
+                    string uri = "user/byid/" + this.currentUserID.Substring(9) + "/friends";
+                    JToken result = await this.client.InvokeApiAsync(uri, HttpMethod.Get, null);
 
+                    if (result != null && result.HasValues)
+                    {
+                        List<HHListItem> households = new List<HHListItem>();
+
+                        foreach (var hh in result)
+                        {
+                            HHListItem hhListItem = new HHListItem();
+
+                            hhListItem.name = (string)((JObject)hh)["name"];
+                            hhListItem.landlordName = (string)((JObject)hh)["landlordName"];
+                            hhListItem.id = (string)((JObject)hh)["id"];
+
+                            households.Add(hhListItem);
+                        }
+
+                        this.HHListItems = households;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }            
             }
             return true;
         }
@@ -159,7 +183,17 @@ namespace LWalshFinalClient
             {
                 HHScrollAdapter householdsAdapter = new HHScrollAdapter(this, this.HHListItems);
                 this.householdsListView.Adapter = householdsAdapter;
+                this.householdsListView.Visibility = ViewStates.Visible;
             }
+            else
+            {
+                this.householdsListView.Visibility = ViewStates.Gone;
+            }
+        }
+
+        private void friendsHHSwitchChange(Object sender, EventArgs e)
+        {
+            updateDisplay();
         }
 
         private async void loginClick(Object sender, EventArgs e)

@@ -170,6 +170,8 @@ namespace LWalshFinalClient
                     {
                         message = "Successfully submitted proposal! The vote will now appear in the household's" +
                             "vote list to all household members.";
+                        builder.SetMessage(message);
+                        builder.Create().Show();
                         //reset fields for next vote
                         this.balanceChangeEditText.Text = "";
                         this.descriptionTextEditText.Text = "";
