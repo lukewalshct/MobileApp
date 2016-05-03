@@ -188,13 +188,16 @@ namespace LWalshFinalClient
             {
                 this.currentUserID = this.Intent.Extras.GetString("currentUserID");
                 this.currentHHID = this.Intent.Extras.GetString("currentHHID");
-                //if the passed client is non-null, use the passed client
-                var clientJson = this.Intent.Extras.GetString("client");
-                if (clientJson != null)
-                {
-                    MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
-                    this.client = client;
-                }
+                //recreate the authenticated user and add it to the client
+                string clientUserID = this.Intent.Extras.GetString("clientUserID");
+                this.client.CurrentUser = new MobileServiceUser(clientUserID);                
+                this.client.CurrentUser.MobileServiceAuthenticationToken = this.Intent.Extras.GetString("clientAuthToken");
+                //var clientJson = this.Intent.Extras.GetString("client");
+                //if (clientJson != null)
+                //{
+                //    MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
+                //    this.client = client;
+                //}
             }
         }
 
@@ -234,8 +237,9 @@ namespace LWalshFinalClient
             //serialize the mobilserivce client so user data stays intact
             //var clientJson = new JavaScriptSerializer().Serialize(this.client);
             //bundle.PutString("client", clientJson);
-            newActivity.PutExtras(bundle);
-
+            bundle.PutString("clientUserID", this.client.CurrentUser.UserId);
+            bundle.PutString("clientAuthToken", this.client.CurrentUser.MobileServiceAuthenticationToken);
+            newActivity.PutExtras(bundle);            
 
             //newActivity.PutExtra("MyData", "Data from Activity1");
             StartActivity(newActivity);

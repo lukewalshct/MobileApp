@@ -86,13 +86,11 @@ namespace LWalshFinalClient
 
         private async void updateDisplay()
         {
-            //only refresh members list if a new proposal is being edited
-            if (this.isProposingVote)
-            {
-                await getHousehold();
-                await getCurrentMember();
-                setMemberSpinnerDropdown();
-            }
+            //refresh household and members list
+            await getHousehold();
+            await getCurrentMember();
+            setMemberSpinnerDropdown();
+
             this.proposeTableLayout.Visibility = this.isProposingVote ? ViewStates.Visible : ViewStates.Gone;
             this.submitButtonsLayout.Visibility = this.isProposingVote ? ViewStates.Visible : ViewStates.Gone;
             this.proposeAnonCheckBox.Visibility = this.isProposingVote ? ViewStates.Visible : ViewStates.Gone;
@@ -105,12 +103,15 @@ namespace LWalshFinalClient
                 this.currentUserID = this.Intent.Extras.GetString("currentUserID");
                 this.currentHHID = this.Intent.Extras.GetString("currentHHID");
                 //if the passed client is non-null, use the passed client
-                var clientJson = this.Intent.Extras.GetString("client");
-                if (clientJson != null)
-                {
-                    MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
-                    this.client = client;
-                }
+                string clientUserID = this.Intent.Extras.GetString("clientUserID");
+                this.client.CurrentUser = new MobileServiceUser(clientUserID);
+                this.client.CurrentUser.MobileServiceAuthenticationToken = this.Intent.Extras.GetString("clientAuthToken");
+                //var clientJson = this.Intent.Extras.GetString("client");
+                //if (clientJson != null)
+                //{
+                //    MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
+                //    this.client = client;
+                //}
             }
         }
 
@@ -160,6 +161,7 @@ namespace LWalshFinalClient
                     vote.description = description;
                     vote.householdID = this.currentHHID;
                     vote.isAnonymous = isAnonymous;
+                    vote.voteType = VoteType.Karma;
 
                     JToken payload = JObject.FromObject(vote);
                     JToken result = await this.client.InvokeApiAsync("vote/newvote", payload);
@@ -228,6 +230,8 @@ namespace LWalshFinalClient
             //serialize the mobilserivce client so user data stays intact
             //var clientJson = new JavaScriptSerializer().Serialize(this.client);
             //bundle.PutString("client", clientJson);
+            bundle.PutString("clientUserID", this.client.CurrentUser.UserId);
+            bundle.PutString("clientAuthToken", this.client.CurrentUser.MobileServiceAuthenticationToken);
             newActivity.PutExtras(bundle);
 
 

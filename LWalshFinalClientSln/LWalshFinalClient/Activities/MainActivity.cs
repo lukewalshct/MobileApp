@@ -81,12 +81,14 @@ namespace LWalshFinalClient
                     this.isLoggedIn = true;
                     this.isRegistered = true;
                 }
-                var clientJson = this.Intent.Extras.GetString("client");                
-                if (clientJson != null)
-                {
-                    MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
-                    this.client = client;
-                }
+                this.client.CurrentUser.UserId = this.Intent.Extras.GetString("clientUserID");
+                this.client.CurrentUser.MobileServiceAuthenticationToken = this.Intent.Extras.GetString("clientAuthToken");
+                //var clientJson = this.Intent.Extras.GetString("client");                
+                //if (clientJson != null)
+                //{
+                //    MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
+                //    this.client = client;
+                //}
             }
         }
         private async void updateDisplay()
@@ -331,9 +333,11 @@ namespace LWalshFinalClient
                 bundle.PutString("isLoggedIn", "true");
                 bundle.PutString("currentUserID", this.currentUserID);
                 bundle.PutString("currentHHID", item.id);
-                //serialize the mobilserivce client so user data stays intact
+                //pass the authentication data
                 //string clientJson = new JavaScriptSerializer().Serialize(this.client);
                 //bundle.PutString("client", clientJson);
+                bundle.PutString("clientUserID", this.client.CurrentUser.UserId);
+                bundle.PutString("clientAuthToken", this.client.CurrentUser.MobileServiceAuthenticationToken);
                 newActivity.PutExtras(bundle);
 
                 //newActivity.PutExtra("MyData", "Data from Activity1");

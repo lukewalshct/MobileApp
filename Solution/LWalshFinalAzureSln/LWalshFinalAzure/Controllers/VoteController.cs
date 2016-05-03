@@ -53,6 +53,7 @@ namespace LWalshFinalAzure.Controllers
         [HttpPost]
         [Route("vote/newvote")]
         [ActionName("newvote")]
+        [Authorize]
         public async Task<HttpResponseMessage> NewVote ([FromBody] Vote v)
         {
             if (v != null)
@@ -65,7 +66,7 @@ namespace LWalshFinalAzure.Controllers
                     IDPTransaction idpTransaction = new IDPTransaction(this.Request, this.ConfigSettings, this.Configuration);
                     ExtendedUserInfo userInfo = await idpTransaction.GetIDPInfo();
 
-                    User u = this.context.Users.Where(x => x.IDPUserID == userInfo.IDPUserId).SingleOrDefault(); 
+                    User u = this.context.Users.Where(x => x.IDPUserID == "Facebook:" + userInfo.IDPUserId).SingleOrDefault(); 
                     HouseholdMember callMember = null;
                     HouseholdMember targetMember = null;
                     if (u != null)
