@@ -1,17 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <TextView
-        android:text="Member"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/memberName" />
-    <TextView
-        android:text="VoteType"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/voteType" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayout1">
+        <TextView
+            android:text="Member"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/memberName"
+            android:layout_width="202.0dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="VoteType"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/voteType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayout1">
+        <Button
+            android:text="Button"
+            android:layout_width="173.5dp"
+            android:layout_height="55.5dp"
+            android:id="@+id/button1" />
+        <Button
+            android:text="Button"
+            android:layout_width="172.5dp"
+            android:layout_height="50.5dp"
+            android:id="@+id/button2" />
+    </LinearLayout>
 </LinearLayout>

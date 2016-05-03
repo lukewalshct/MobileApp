@@ -46,7 +46,7 @@ namespace LWalshFinalClient.Resources
             //var contactImage = view.FindViewById<ImageView>(Resource.Id.ContactImage);
             //contactName.Text = this.voteListItems[position].targetMember;
             view.FindViewById<TextView>(Resource.Id.memberName).Text = this.voteListItems[position].targetMember;
-            view.FindViewById<TextView>(Resource.Id.voteType).Text = this.voteListItems[position].voteType;
+            view.FindViewById<TextView>(Resource.Id.voteType).Text = "Type of vote: " + this.voteListItems[position].voteType;
             return view;
         }
     }

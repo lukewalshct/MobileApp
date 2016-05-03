@@ -38,8 +38,8 @@ namespace LWalshFinalClient
         CheckBox proposeAnonCheckBox;
         public string currentUserID;
         public string currentHHID;
-        TextView memberNameTextView;
-        TextView voteTypeTextView;
+        //TextView memberNameTextView;
+        //TextView voteTypeTextView;
         bool isProposingVote;
         Household currentHousehold;
         List<HouseholdMember> members;
@@ -60,8 +60,8 @@ namespace LWalshFinalClient
             this.homeButton = FindViewById<Button>(Resource.Id.homeButtonVote);
             this.householdInfoButton = FindViewById<Button>(Resource.Id.HHInfoButtonVote);
             this.messagesButton = FindViewById<Button>(Resource.Id.messagesButtonVote);
-            this.memberNameTextView = FindViewById<TextView>(Resource.Id.memberName);
-            this.voteTypeTextView = FindViewById<TextView>(Resource.Id.voteType);
+            //this.memberNameTextView = FindViewById<TextView>(Resource.Id.memberName);
+            //this.voteTypeTextView = FindViewById<TextView>(Resource.Id.voteType);
             this.proposeVoteButton = FindViewById<Button>(Resource.Id.proposalButton);
             this.submitButton = FindViewById<Button>(Resource.Id.submitButton);
             this.cancelButton = FindViewById<Button>(Resource.Id.cancelButton);
@@ -80,8 +80,8 @@ namespace LWalshFinalClient
             this.cancelButton.Click += cancelClick;
             this.submitButton.Click += submitClick;
 
-            this.memberNameTextView.Visibility = ViewStates.Invisible;
-            this.voteTypeTextView.Visibility = ViewStates.Invisible;
+            //this.memberNameTextView.Visibility = ViewStates.Invisible;
+            //this.voteTypeTextView.Visibility = ViewStates.Invisible;
             this.isProposingVote = false;
 
             getIntentParameters();
