@@ -7,7 +7,32 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout1">
+        android:id="@+id/landlordTitleLayout">
+        <TextView
+            android:text="Household Summary"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/textView23" />
+        <Button
+            android:text="Cancel"
+            android:layout_width="85.0dp"
+            android:layout_height="30.0dp"
+            android:id="@+id/cancelEditButton"
+            android:textSize="12.0sp"
+            android:layout_marginLeft="15.0dp" />
+        <Button
+            android:text="EditSave"
+            android:layout_width="85.0dp"
+            android:layout_height="30.0dp"
+            android:id="@+id/editSaveButton"
+            android:textSize="12.0sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/userTitleLayout">
         <TextView
             android:text="Household Summary"
             android:textAppearance="?android:attr/textAppearanceMedium"

@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 using LWalshFinalClient.Resources;
+using Android.Graphics;
 
 namespace LWalshFinalClient
 {
@@ -25,6 +26,8 @@ namespace LWalshFinalClient
         Button homeButton;
         Button votesButton;
         Button messagesButton;
+        Button cancelEditButton;
+        Button saveEditButton;
         string currentUserID;
         string currentHHID;
         Household currentHousehold;
@@ -35,7 +38,10 @@ namespace LWalshFinalClient
         EditText hhCurrencyEditText;
         TextView hhLandlordTextView;
         ListView membersListView;
+        LinearLayout landlordTitleLayout;
+        LinearLayout userTitleLayout;
         bool isMember;
+        bool isEditInfo;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -57,11 +63,18 @@ namespace LWalshFinalClient
             this.hhCurrencyEditText = FindViewById<EditText>(Resource.Id.hhCurEditText);
             this.hhLandlordTextView = FindViewById<TextView>(Resource.Id.hhLandlordTextView);
             this.membersListView = FindViewById<ListView>(Resource.Id.memberListView);
+            this.cancelEditButton = FindViewById<Button>(Resource.Id.cancelEditButton);
+            this.saveEditButton = FindViewById<Button>(Resource.Id.editSaveButton);
+            this.landlordTitleLayout = FindViewById<LinearLayout>(Resource.Id.landlordTitleLayout);
+            this.userTitleLayout = FindViewById<LinearLayout>(Resource.Id.userTitleLayout);
 
             this.homeButton.Click += navigationClick;
             this.votesButton.Click += navigationClick;
             this.messagesButton.Click += navigationClick;
-
+            this.saveEditButton.Click += saveEditClick;
+            this.cancelEditButton.Click += cancelEditClick;
+            this.isMember = false;
+            this.isEditInfo = false;
             //if the activity was instantiated by an intent with parameters, get the parameters
             //and initialize the appropriate class variables
             getIntentParameters();
@@ -90,13 +103,117 @@ namespace LWalshFinalClient
             if (this.isMember)
             {
                 this.votesButton.Clickable = true;
-                this.messagesButton.Clickable = true;                                
+                this.messagesButton.Clickable = true;
+                this.votesButton.Enabled = true;
+                this.messagesButton.Enabled = true;                                          
             }
             else
             {
                 this.votesButton.Clickable = false;
                 this.messagesButton.Clickable = false;
+                this.votesButton.Enabled = false;
+                this.messagesButton.Enabled = false;
             }
+            if (this.isMember && this.currentMember != null && this.currentMember.isLandlord)
+            {
+                this.landlordTitleLayout.Visibility = ViewStates.Visible;
+                this.userTitleLayout.Visibility = ViewStates.Gone;
+                this.saveEditButton.Clickable = true;
+                this.cancelEditButton.Clickable = true;                                
+            }
+            else
+            {
+                this.landlordTitleLayout.Visibility = ViewStates.Gone;
+                this.userTitleLayout.Visibility = ViewStates.Visible;
+                this.saveEditButton.Clickable = false;
+                this.cancelEditButton.Clickable = false;
+            }
+            if (this.isEditInfo)
+            {
+                this.hhNameEditText.Enabled = true;
+                this.hhCurrencyEditText.Enabled = true;
+                this.hhDescriptionEditText.Enabled = true;
+            }
+            else
+            {
+                this.hhNameEditText.Enabled = false;                
+                this.hhCurrencyEditText.Enabled = false;
+                this.hhDescriptionEditText.Enabled = false;
+                this.hhNameEditText.SetTextColor(Color.White);
+                this.hhCurrencyEditText.SetTextColor(Color.White);
+                this.hhDescriptionEditText.SetTextColor(Color.White);
+            }
+            this.cancelEditButton.Visibility = this.isEditInfo ? ViewStates.Visible : ViewStates.Invisible;
+            this.saveEditButton.Text = this.isEditInfo ? "Save" : "Edit Info";
+        }
+
+        private async void saveEditClick(Object sender, EventArgs e)
+        {
+            if (this.isEditInfo)
+            {
+                bool successfulUpdate = await updateHouseholdInfo();
+                if (successfulUpdate)
+                {
+                    this.isEditInfo = false;
+                }
+            }
+            else
+            {
+                this.isEditInfo = true;
+            }
+            updateDisplay();
+        }
+
+        private async Task<bool> updateHouseholdInfo()
+        {
+            string message = "";
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);            
+            try
+            {
+                Household hh = new Household();
+                hh.id = this.currentHHID;
+                hh.landlordIDP = this.currentUserID;
+                hh.name = this.hhNameEditText.Text;
+                hh.description = this.hhDescriptionEditText.Text;
+                hh.currencyName = this.hhCurrencyEditText.Text;
+
+                JToken payload = JObject.FromObject(hh);
+                JToken result = await this.client.InvokeApiAsync("household/editinfo", payload);
+
+                if (result.HasValues)
+                {
+                    message = "Successfully updated household info.";
+                    builder.SetMessage(message);
+                    builder.Create().Show();                    
+                    return true;
+                }
+            }
+            catch (MobileServiceInvalidOperationException ex)
+            {
+                message = ex.Message;
+                builder.SetMessage(message);
+                builder.Create().Show();
+                return false;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                builder.SetMessage(message);
+                builder.Create().Show();
+                return false;
+            }
+            if (message != "")
+            {
+                builder.SetMessage(message);
+                builder.Create().Show();
+            }
+            return false;
+
+        }
+        private void cancelEditClick(Object sender, EventArgs e)
+        {
+            this.isEditInfo = false;
+            updateDisplay();
         }
 
         private async Task<bool> getHousehold()
@@ -193,7 +310,7 @@ namespace LWalshFinalClient
             {
                 errorMessage = ex.Message;
             }
-            if (errorMessage == "")
+            if (errorMessage != "")
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.SetMessage(errorMessage);

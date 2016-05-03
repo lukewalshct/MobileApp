@@ -157,17 +157,19 @@ namespace LWalshFinalAzure.Controllers
         [HttpPost]
         [ActionName("editinfo")]
         [Route("household/editinfo")]
-        public HttpResponseMessage EditHouseholdInfo([FromBody] Household updateHH)
+        [Authorize]
+        public async Task<HttpResponseMessage> EditHouseholdInfo([FromBody] Household updateHH)
         {
             Household existHH = this.context.Households.Where(x => x.Id == updateHH.Id).FirstOrDefault();
-
-            string userIDP = "FB1";//need to change to caller's IDP
+            
+            IDPTransaction idpTransaction = new IDPTransaction(this.Request, this.ConfigSettings, this.Configuration);
+            ExtendedUserInfo userInfo = await idpTransaction.GetIDPInfo();
 
             if (updateHH != null)
             {
                 if (existHH != null)
                 {
-                    if (updateHH.landlordIDP == userIDP)
+                    if (updateHH.landlordIDP == "Facebook:" + userInfo.IDPUserId)
                     {
                         existHH.name = updateHH.name;
                         existHH.description = updateHH.description;
