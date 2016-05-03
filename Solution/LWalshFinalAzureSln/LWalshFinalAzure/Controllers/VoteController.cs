@@ -114,6 +114,7 @@ namespace LWalshFinalAzure.Controllers
                         newVote.membersVoted.Add(callMember);
                         newVote.targetMemberID = v.targetMemberID;
                         newVote.voteType = v.voteType;
+                        newVote.voteStatus = "In Progress";
                         if (v.voteType == VoteType.NewMember)
                         {
                             newVote.votesFor = 0;

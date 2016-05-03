@@ -164,7 +164,7 @@ namespace LWalshFinalClient
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             try
             {
-                NewVote vote = new NewVote();
+                Vote vote = new Vote();
 
                 vote.targetMemberID = this.currentUserID;
                 vote.balanceChange = 0;

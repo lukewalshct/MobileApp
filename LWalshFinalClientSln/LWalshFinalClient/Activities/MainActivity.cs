@@ -201,10 +201,12 @@ namespace LWalshFinalClient
             try {
                 if (client.CurrentUser == null || client.CurrentUser.UserId == null)
                 {
+                    this.loginButton.Enabled = false;
                     MobileServiceAuthenticationProvider providerType = MobileServiceAuthenticationProvider.Facebook;
                     await AuthenticateUserAsync(providerType);
                     this.isLoggedIn = true;
                     this.isRegistered = await registerUser();
+                    this.loginButton.Enabled = true;
                 }
                 else
                 {

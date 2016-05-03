@@ -42,6 +42,7 @@ namespace LWalshFinalClient
         bool isProposingVote;
         Household currentHousehold;
         List<HouseholdMember> members;
+        List<Vote> householdVotes;
         HouseholdMember currentMember;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -93,6 +94,7 @@ namespace LWalshFinalClient
             //refresh household and members list
             await getHousehold();
             await getCurrentMember();
+            await getHouseholdVotes();
             setMemberSpinnerDropdown();
 
             this.proposeTableLayout.Visibility = this.isProposingVote ? ViewStates.Visible : ViewStates.Gone;
@@ -158,7 +160,7 @@ namespace LWalshFinalClient
             {
                 try
                 {
-                    NewVote vote = new NewVote();
+                    Vote vote = new Vote();
 
                     vote.targetMemberID = this.members.Where(x => x.firstName == targetMember).Single().userId;
                     vote.balanceChange = int.Parse(balanceChange);
@@ -339,6 +341,70 @@ namespace LWalshFinalClient
                 builder.SetMessage(errorMessage);
                 builder.Create().Show();
             }
+            return false;
+        }
+
+        private async Task<bool> getHouseholdVotes()
+        {
+            string errorMessage = "";
+            try
+            {
+                JToken result = await this.client.InvokeApiAsync("vote/byhhid/" + this.currentHHID, HttpMethod.Get, null);
+
+                if (result.HasValues)
+                {
+                    //parse the household info and list of members
+                    this.householdVotes = new List<Vote>();
+
+                    //parse votes
+                    JArray votesJArray = (JArray)result;
+                    foreach (var v in votesJArray)
+                    {
+                        Vote newVote = new Vote();
+
+                        newVote.balanceChange =(int)v["balanceChange"];
+                        string voteType = (string)v["voteType"];
+                        if (voteType != null && voteType != "")
+                        {                        
+                            switch (voteType)
+                            {
+                                case "Karma":
+                                    newVote.voteType = VoteType.Karma;
+                                    break;
+                                case "Landlord":
+                                    newVote.voteType = VoteType.Landlord;
+                                    break;
+                                case "NewMember":
+                                    newVote.voteType = VoteType.NewMember;
+                                    break;
+                                case "EvictMember":
+                                    newVote.voteType = VoteType.EvictMember;
+                                    break;
+                            }                            
+                        }                        
+                        newVote.targetMemberID = (string)v["targetMemberID"];
+                        newVote.isAnonymous = (bool)v["isAnonymous"];
+                        newVote.description = (string)v["description"];
+                        newVote.votesFor = (int)v["votesFor"];
+                        newVote.votesAgainst = (int)v["votesAgainst"];
+                        newVote.voteStatus = (string)v["voteStatus"];
+
+                        this.householdVotes.Add(newVote);
+                    }
+                    return true;
+                }
+            }
+            catch (MobileServiceInvalidOperationException ex)
+            {
+                errorMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.SetMessage(errorMessage);
+            builder.Create().Show();
             return false;
         }
 

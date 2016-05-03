@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace LWalshFinalClient.Data_Models
 {
-    class NewVote
+    class Vote
     {       
 
         public string householdID { get; set; }
@@ -26,6 +26,12 @@ namespace LWalshFinalClient.Data_Models
         public bool isAnonymous { get; set; }
 
         public string description { get; set; }
+
+        public int votesFor { get; set; }
+
+        public int votesAgainst { get; set; }
+
+        public string voteStatus { get; set; }
 
     }
 

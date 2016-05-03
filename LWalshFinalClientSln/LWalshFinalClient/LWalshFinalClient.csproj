@@ -47,7 +47,7 @@
     <Compile Include="Data Models\Household.cs" />
     <Compile Include="Activities\HouseholdActiviy.cs" />
     <Compile Include="Data Models\HouseholdMember.cs" />
-    <Compile Include="Data Models\NewVote.cs" />
+    <Compile Include="Data Models\Vote.cs" />
     <Compile Include="HttpAutoProxyHandler.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Data Models\MemberListItem.cs" />
