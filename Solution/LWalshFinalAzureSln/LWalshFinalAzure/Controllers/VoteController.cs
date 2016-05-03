@@ -114,11 +114,21 @@ namespace LWalshFinalAzure.Controllers
                         newVote.membersVoted.Add(callMember);
                         newVote.targetMemberID = v.targetMemberID;
                         newVote.voteType = v.voteType;
-                        newVote.votesFor = 1;
+                        if (v.voteType == VoteType.NewMember)
+                        {
+                            newVote.votesFor = 0;
+                        }
+                        else
+                        {
+                            newVote.votesFor = 1;
+                        }
                         newVote.votesAgainst = 0;
 
                         hh.votes.Add(newVote);
-                        callMember.votes.Add(newVote);
+                        if (callMember != null)
+                        {
+                            callMember.votes.Add(newVote);
+                        }
                         this.context.Votes.Add(newVote);
 
                         this.context.SaveChanges();

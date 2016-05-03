@@ -40,7 +40,7 @@ namespace LWalshFinalClient.Resources
                 view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem2, null);
             }
             view.FindViewById<TextView>(Android.Resource.Id.Text1).Text = this.HHListItems[position].name;
-            view.FindViewById<TextView>(Android.Resource.Id.Text2).Text = this.HHListItems[position].landlordName;
+            view.FindViewById<TextView>(Android.Resource.Id.Text2).Text = "Landlord: " + this.HHListItems[position].landlordName;
             return view;
         }
     }

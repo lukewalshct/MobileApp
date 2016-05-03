@@ -86,6 +86,10 @@ namespace LWalshFinalClient
 
         private async void updateDisplay()
         {
+            this.proposeTableLayout.Visibility = ViewStates.Gone;
+            this.submitButtonsLayout.Visibility = ViewStates.Gone;
+            this.proposeAnonCheckBox.Visibility = ViewStates.Gone;
+
             //refresh household and members list
             await getHousehold();
             await getCurrentMember();
@@ -299,6 +303,7 @@ namespace LWalshFinalClient
         private async Task<bool> getCurrentMember()
         {
             string errorMessage = "";
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             try
             {
                 JToken m = await this.client.InvokeApiAsync("household/byid/" + this.currentHHID +
@@ -328,10 +333,12 @@ namespace LWalshFinalClient
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
+            }            
+            if (errorMessage != "")
+            {
+                builder.SetMessage(errorMessage);
+                builder.Create().Show();
             }
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.SetMessage(errorMessage);
-            builder.Create().Show();
             return false;
         }
 

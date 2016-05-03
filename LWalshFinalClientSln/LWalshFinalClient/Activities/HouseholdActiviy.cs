@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using LWalshFinalClient.Resources;
 using Android.Graphics;
+using LWalshFinalClient.Data_Models;
 
 namespace LWalshFinalClient
 {
@@ -28,6 +29,7 @@ namespace LWalshFinalClient
         Button messagesButton;
         Button cancelEditButton;
         Button saveEditButton;
+        Button joinButton;
         string currentUserID;
         string currentHHID;
         Household currentHousehold;
@@ -67,12 +69,14 @@ namespace LWalshFinalClient
             this.saveEditButton = FindViewById<Button>(Resource.Id.editSaveButton);
             this.landlordTitleLayout = FindViewById<LinearLayout>(Resource.Id.landlordTitleLayout);
             this.userTitleLayout = FindViewById<LinearLayout>(Resource.Id.userTitleLayout);
+            this.joinButton = FindViewById<Button>(Resource.Id.joinButton);
 
             this.homeButton.Click += navigationClick;
             this.votesButton.Click += navigationClick;
             this.messagesButton.Click += navigationClick;
             this.saveEditButton.Click += saveEditClick;
             this.cancelEditButton.Click += cancelEditClick;
+            this.joinButton.Click += joinClick;
             this.isMember = false;
             this.isEditInfo = false;
             //if the activity was instantiated by an intent with parameters, get the parameters
@@ -83,6 +87,7 @@ namespace LWalshFinalClient
 
         private async void updateDisplay()
         {
+            this.joinButton.Visibility = ViewStates.Gone;
             await getHousehold();
             this.isMember = await getCurrentMember();
             if (this.currentHousehold != null)
@@ -145,6 +150,62 @@ namespace LWalshFinalClient
             }
             this.cancelEditButton.Visibility = this.isEditInfo ? ViewStates.Visible : ViewStates.Invisible;
             this.saveEditButton.Text = this.isEditInfo ? "Save" : "Edit Info";
+            this.joinButton.Visibility = this.isMember ? ViewStates.Gone : ViewStates.Visible;
+        }
+
+        private async void joinClick(Object sender, EventArgs e)
+        {
+            await sendJoinRequest();            
+        }
+
+        private async Task<bool> sendJoinRequest()
+        {
+            string message = "";
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            try
+            {
+                NewVote vote = new NewVote();
+
+                vote.targetMemberID = this.currentUserID;
+                vote.balanceChange = 0;
+                vote.description = "Request to join household";
+                vote.householdID = this.currentHHID;
+                vote.isAnonymous = false;
+                vote.voteType = VoteType.NewMember;
+
+                JToken payload = JObject.FromObject(vote);
+                JToken result = await this.client.InvokeApiAsync("vote/newvote", payload);
+
+                if (result.HasValues)
+                {
+                    message = "Successfully submitted request to join the household! The request will now appear in the household's" +
+                        "vote list to all household members. All current household members must approve your request in order to join.";
+                    builder.SetMessage(message);
+                    builder.Create().Show();
+                    //reset fields for next vote
+                    return true;
+                }
+            }
+            catch (MobileServiceInvalidOperationException ex)
+            {
+                message = ex.Message;
+                builder.SetMessage(message);
+                builder.Create().Show();
+                return false;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                builder.SetMessage(message);
+                builder.Create().Show();
+                return false;
+            }
+            if (message != "")
+            {
+                builder.SetMessage(message);
+                builder.Create().Show();
+            }
+            return false;
         }
 
         private async void saveEditClick(Object sender, EventArgs e)
@@ -272,8 +333,9 @@ namespace LWalshFinalClient
         }      
     
         private async Task<bool> getCurrentMember()
-        {            
+        {
             string errorMessage = "";
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             try
             {
                 JToken m = await this.client.InvokeApiAsync("household/byid/" + this.currentHHID +
@@ -292,14 +354,8 @@ namespace LWalshFinalClient
                     this.currentMember.isEvictVote = (bool)((JObject)m)["isEvictVote"];
                     this.currentMember.isApproveVote = (bool)((JObject)m)["isApproveVote"];
                     this.currentMember.userId = (string)((JObject)m)["userId"];
-                    
+
                     return true;
-                }
-                else
-                {
-                    errorMessage = "You are not a member of this household. To request to be a part of " +
-                        "this household, please click the 'Join Household' button (the household will then " +
-                        "vote on your membership).";
                 }
             }
             catch (MobileServiceInvalidOperationException ex)
@@ -312,7 +368,6 @@ namespace LWalshFinalClient
             }
             if (errorMessage != "")
             {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.SetMessage(errorMessage);
                 builder.Create().Show();
             }
