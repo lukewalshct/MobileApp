@@ -33,6 +33,10 @@ namespace LWalshFinalClient.Data_Models
 
         public string voteStatus { get; set; }
 
+        public int votesNeeded { get; set; }
+
+        public string targetMemberName { get; set; }
+
     }
 
     public enum VoteType { Karma, Landlord, NewMember, EvictMember }

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using LWalshFinalClient.Data_Models;
+using LWalshFinalClient.Resources;
 
 namespace LWalshFinalClient
 {
@@ -44,6 +45,7 @@ namespace LWalshFinalClient
         List<HouseholdMember> members;
         List<Vote> householdVotes;
         HouseholdMember currentMember;
+        ListView voteListView;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -69,6 +71,7 @@ namespace LWalshFinalClient
             this.proposeTableLayout = FindViewById<TableLayout>(Resource.Id.proposeVoteTable);
             this.submitButtonsLayout = FindViewById<LinearLayout>(Resource.Id.submitLayout);
             this.proposeAnonCheckBox = FindViewById<CheckBox>(Resource.Id.anonCheckBox);
+            this.voteListView = FindViewById<ListView>(Resource.Id.voteListView);
 
             this.homeButton.Click += navigationClick;
             this.householdInfoButton.Click += navigationClick;
@@ -96,6 +99,7 @@ namespace LWalshFinalClient
             await getCurrentMember();
             await getHouseholdVotes();
             setMemberSpinnerDropdown();
+            displayVotes();
 
             this.proposeTableLayout.Visibility = this.isProposingVote ? ViewStates.Visible : ViewStates.Gone;
             this.submitButtonsLayout.Visibility = this.isProposingVote ? ViewStates.Visible : ViewStates.Gone;
@@ -168,7 +172,7 @@ namespace LWalshFinalClient
                     vote.householdID = this.currentHHID;
                     vote.isAnonymous = isAnonymous;
                     vote.voteType = VoteType.Karma;
-
+                    
                     JToken payload = JObject.FromObject(vote);
                     JToken result = await this.client.InvokeApiAsync("vote/newvote", payload);
 
@@ -388,6 +392,8 @@ namespace LWalshFinalClient
                         newVote.votesFor = (int)v["votesFor"];
                         newVote.votesAgainst = (int)v["votesAgainst"];
                         newVote.voteStatus = (string)v["voteStatus"];
+                        newVote.votesNeeded = (int)v["votesNeeded"];
+                        newVote.targetMemberName = (string)v["targetMemberName"];
 
                         this.householdVotes.Add(newVote);
                     }
@@ -408,6 +414,32 @@ namespace LWalshFinalClient
             return false;
         }
 
+        private void displayVotes()
+        {
+            if (this.householdVotes != null && this.householdVotes.Count > 0)
+            {
+                try
+                {
+                    List<VoteListItem> voteListItems = this.householdVotes.Select(x =>
+                        new VoteListItem
+                        {
+                            targetMember = x.targetMemberName,
+                            voteType = x.voteType.ToString(),
+                            balanceChange = x.balanceChange,
+                            description = x.description,
+                            statusText = x.votesFor + " votes for, " + x.votesAgainst + " votes against (" + x.votesNeeded + ")"
+                        }).ToList();
+                    VoteScrollAdapter votesAdapter = new VoteScrollAdapter(this, voteListItems);
+                    this.voteListView.Adapter = votesAdapter;
+                }
+                catch (Exception ex)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.SetMessage(ex.Message);
+                    builder.Create().Show();
+                }
+            }
+        }
         private void setMemberSpinnerDropdown()
         {
             string[] memberNames = this.members.Select(x => x.firstName).ToArray();

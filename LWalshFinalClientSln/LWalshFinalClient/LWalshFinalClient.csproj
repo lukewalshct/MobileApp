@@ -48,6 +48,7 @@
     <Compile Include="Activities\HouseholdActiviy.cs" />
     <Compile Include="Data Models\HouseholdMember.cs" />
     <Compile Include="Data Models\Vote.cs" />
+    <Compile Include="Data Models\VoteListItem.cs" />
     <Compile Include="HttpAutoProxyHandler.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Data Models\MemberListItem.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Activities\VoteActivity.cs" />
+    <Compile Include="Resources\VoteScrollAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

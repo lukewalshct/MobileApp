@@ -28,6 +28,7 @@ namespace LWalshFinalAzure.Controllers
             if (hh != null)
             {
                 int votesNeeded = (int) Math.Round((((double)hh.members.Count) / 2), 0, MidpointRounding.AwayFromZero);
+
                 return Request.CreateResponse(HttpStatusCode.OK,
                     hh.votes.Select(x => new
                     {
@@ -35,6 +36,7 @@ namespace LWalshFinalAzure.Controllers
                         householdID = x.householdID,
                         voteType = x.voteType,
                         targetMemberID = x.targetMemberID,
+                        targetMemberName = this.context.Users.Where(y => y.IDPUserID == x.targetMemberID).Single().firstName,                        
                         balanceChange = x.balanceChange,
                         isAnonymous = x.isAnonymous,
                         description = x.description,
