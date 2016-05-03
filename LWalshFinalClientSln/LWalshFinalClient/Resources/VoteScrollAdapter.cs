@@ -39,13 +39,14 @@ namespace LWalshFinalClient.Resources
             if (view == null) // otherwise create a new one
             {
                 //view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem2, null);
-                view = context.LayoutInflater.Inflate(Resource.Layout.ContactListItem, null);
+                //view = context.LayoutInflater.Inflate(Resource.Layout.ContactListItem, null);
+                view = context.LayoutInflater.Inflate(Resource.Layout.VoteListItem, null);
             }
-            var contactName = view.FindViewById<TextView>(Resource.Id.ContactName);
-            var contactImage = view.FindViewById<ImageView>(Resource.Id.ContactImage);
-            contactName.Text = this.voteListItems[position].targetMember;
-            //view.FindViewById<TextView>(Android.Resource.Id.Text1).Text = this.voteListItems[position].targetMember;
-            //view.FindViewById<TextView>(Android.Resource.Id.Text2).Text = this.voteListItems[position].voteType;
+            //var contactName = view.FindViewById<TextView>(Resource.Id.ContactName);
+            //var contactImage = view.FindViewById<ImageView>(Resource.Id.ContactImage);
+            //contactName.Text = this.voteListItems[position].targetMember;
+            view.FindViewById<TextView>(Resource.Id.memberName).Text = this.voteListItems[position].targetMember;
+            view.FindViewById<TextView>(Resource.Id.voteType).Text = this.voteListItems[position].voteType;
             return view;
         }
     }

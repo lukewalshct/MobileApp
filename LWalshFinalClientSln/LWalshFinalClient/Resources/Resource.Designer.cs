@@ -271,6 +271,9 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f030004
 			public const int Vote = 2130903044;
 			
+			// aapt resource value: 0x7f030005
+			public const int VoteListItem = 2130903045;
+			
 			static Layout()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
