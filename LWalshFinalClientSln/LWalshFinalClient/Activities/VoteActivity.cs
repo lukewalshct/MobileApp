@@ -427,7 +427,7 @@ namespace LWalshFinalClient
                             voteType = x.voteType.ToString(),
                             balanceChange = x.balanceChange,
                             description = x.description,
-                            statusText = x.votesFor + " votes for, " + x.votesAgainst + " votes against (" + x.votesNeeded + ")"
+                            statusText = x.votesFor + " votes for, " + x.votesAgainst + " against (" + x.votesNeeded + " needed)"
                         }).ToList();
                     VoteScrollAdapter votesAdapter = new VoteScrollAdapter(this, voteListItems);
                     this.voteListView.Adapter = votesAdapter;

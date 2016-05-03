@@ -81,7 +81,7 @@
             android:minWidth="25px"
             android:minHeight="50px"
             android:layout_width="match_parent"
-            android:layout_height="340.5dp"
+            android:layout_height="400.5dp"
             android:id="@+id/voteListView"
             android:layout_marginBottom="107.0dp" />
     <!--

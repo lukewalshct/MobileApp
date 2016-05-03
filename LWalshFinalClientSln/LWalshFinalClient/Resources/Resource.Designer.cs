@@ -91,10 +91,13 @@ namespace LWalshFinalClient
 			public const int balanceChangeEditText = 2131034159;
 			
 			// aapt resource value: 0x7f05003c
-			public const int button1 = 2131034172;
+			public const int balanceChangeText = 2131034172;
 			
-			// aapt resource value: 0x7f05003d
-			public const int button2 = 2131034173;
+			// aapt resource value: 0x7f05003f
+			public const int button1 = 2131034175;
+			
+			// aapt resource value: 0x7f050040
+			public const int button2 = 2131034176;
 			
 			// aapt resource value: 0x7f050034
 			public const int cancelButton = 2131034164;
@@ -110,6 +113,9 @@ namespace LWalshFinalClient
 			
 			// aapt resource value: 0x7f050031
 			public const int descriptionEditText = 2131034161;
+			
+			// aapt resource value: 0x7f05003e
+			public const int descriptionText = 2131034174;
 			
 			// aapt resource value: 0x7f050005
 			public const int editSaveButton = 2131034117;
@@ -182,6 +188,9 @@ namespace LWalshFinalClient
 			
 			// aapt resource value: 0x7f050028
 			public const int quitButton = 2131034152;
+			
+			// aapt resource value: 0x7f05003d
+			public const int statusText = 2131034173;
 			
 			// aapt resource value: 0x7f050035
 			public const int submitButton = 2131034165;

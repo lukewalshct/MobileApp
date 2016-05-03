@@ -47,6 +47,10 @@ namespace LWalshFinalClient.Resources
             //contactName.Text = this.voteListItems[position].targetMember;
             view.FindViewById<TextView>(Resource.Id.memberName).Text = this.voteListItems[position].targetMember;
             view.FindViewById<TextView>(Resource.Id.voteType).Text = "Type of vote: " + this.voteListItems[position].voteType;
+            view.FindViewById<TextView>(Resource.Id.balanceChangeText).Text = "Balance change: " + this.voteListItems[position].balanceChange.ToString();
+            view.FindViewById<TextView>(Resource.Id.statusText).Text = this.voteListItems[position].statusText;
+            view.FindViewById<TextView>(Resource.Id.descriptionText).Text = this.voteListItems[position].description;
+
             return view;
         }
     }
