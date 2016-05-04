@@ -42,6 +42,7 @@ namespace LWalshFinalClient
         ListView membersListView;
         LinearLayout landlordTitleLayout;
         LinearLayout userTitleLayout;
+        User currentUser;
         bool isMember;
         bool isEditInfo;
 
@@ -81,7 +82,7 @@ namespace LWalshFinalClient
             this.isEditInfo = false;
             //if the activity was instantiated by an intent with parameters, get the parameters
             //and initialize the appropriate class variables
-            getIntentParameters();
+            getIntentParameters();            
             updateDisplay();
         }
 
@@ -89,6 +90,7 @@ namespace LWalshFinalClient
         {
             this.joinButton.Visibility = ViewStates.Gone;
             await getHousehold();
+            await getUser();
             this.isMember = await getCurrentMember();
             if (this.currentHousehold != null)
             {
@@ -118,6 +120,11 @@ namespace LWalshFinalClient
                 this.messagesButton.Clickable = false;
                 this.votesButton.Enabled = false;
                 this.messagesButton.Enabled = false;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                string message = "You are not a member of this household. Please click the 'Request to Join Household' button " +
+                    "to join the household. \n\nOnce the request is made, all household members must approve your membership.";
+                builder.SetMessage(message);
+                builder.Create().Show();
             }
             if (this.isMember && this.currentMember != null && this.currentMember.isLandlord)
             {
@@ -167,6 +174,10 @@ namespace LWalshFinalClient
                 Vote vote = new Vote();
 
                 vote.targetMemberID = this.currentUserID;
+                if (this.currentUser != null)
+                {
+                    vote.targetMemberName = this.currentUser.firstName;
+                }
                 vote.balanceChange = 0;
                 vote.description = "Request to join household";
                 vote.householdID = this.currentHHID;
@@ -327,11 +338,50 @@ namespace LWalshFinalClient
                 errorMessage = ex.Message;
             }
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.SetMessage(errorMessage);
-            builder.Create().Show();
+            if (errorMessage != "")
+            {
+                builder.SetMessage(errorMessage);
+                builder.Create().Show();
+            }
             return false;
-        }      
-    
+        }
+
+        private async Task<bool> getUser()
+        {
+            string errorMessage = "";
+            try
+            {
+                JToken result = await this.client.InvokeApiAsync("user/byauth", HttpMethod.Get, null);
+
+                if (result.HasValues)
+                {
+                    //parse the user info and list of members
+                    this.currentUser = new User();
+
+                    this.currentUser.firstName = (string)((JObject)result)["firstName"];
+                    this.currentUser.lastName = (string)((JObject)result)["lastName"];
+                    this.currentUser.IDPUserID = (string)((JObject)result)["IDPUserID"];                    
+                    
+                    return true;
+                }
+            }
+            catch (MobileServiceInvalidOperationException ex)
+            {
+                errorMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            if (errorMessage != "")
+            {
+                builder.SetMessage(errorMessage);
+                builder.Create().Show();
+            }
+            return false;
+        }
+
         private async Task<bool> getCurrentMember()
         {
             string errorMessage = "";

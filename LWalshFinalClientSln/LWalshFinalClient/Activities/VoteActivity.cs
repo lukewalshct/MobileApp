@@ -146,13 +146,13 @@ namespace LWalshFinalClient
             string message = "";
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            string targetMember = this.memberSpinner.SelectedItem.ToString();
+            string targetMemberName = this.memberSpinner.SelectedItem.ToString();
             string balanceChange = this.balanceChangeEditText.Text;
             string description = this.descriptionTextEditText.Text;
             bool isAnonymous = this.proposeAnonCheckBox.Checked;
             
             //check to make sure we have the necessary info
-            if (targetMember == null || targetMember == "")
+            if (targetMemberName == null || targetMemberName == "")
             {
                 message = "Please select a member to submit the vote";
             }
@@ -166,7 +166,10 @@ namespace LWalshFinalClient
                 {
                     Vote vote = new Vote();
 
-                    vote.targetMemberID = this.members.Where(x => x.firstName == targetMember).Single().userId;
+                    HouseholdMember targetMember = this.members.Where(x => x.firstName == targetMemberName).Single();
+
+                    vote.targetMemberID = targetMember.userId;
+                    vote.targetMemberName = targetMember.firstName;
                     vote.balanceChange = int.Parse(balanceChange);
                     vote.description = description;
                     vote.householdID = this.currentHHID;
@@ -214,6 +217,10 @@ namespace LWalshFinalClient
         private void cancelClick(Object sender, EventArgs e)
         {
             this.isProposingVote = false;
+            //reset fields for next vote
+            this.balanceChangeEditText.Text = "";
+            this.descriptionTextEditText.Text = "";
+            this.proposeAnonCheckBox.Checked = false;
             updateDisplay();
         }
 
@@ -387,13 +394,13 @@ namespace LWalshFinalClient
                             }                            
                         }                        
                         newVote.targetMemberID = (string)v["targetMemberID"];
+                        newVote.targetMemberName = (string)v["targetMemberName"];
                         newVote.isAnonymous = (bool)v["isAnonymous"];
                         newVote.description = (string)v["description"];
                         newVote.votesFor = (int)v["votesFor"];
                         newVote.votesAgainst = (int)v["votesAgainst"];
                         newVote.voteStatus = (string)v["voteStatus"];
-                        newVote.votesNeeded = (int)v["votesNeeded"];
-                        newVote.targetMemberName = (string)v["targetMemberName"];
+                        newVote.votesNeeded = (int)v["votesNeeded"];                    
 
                         this.householdVotes.Add(newVote);
                     }
@@ -409,8 +416,11 @@ namespace LWalshFinalClient
                 errorMessage = ex.Message;
             }
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.SetMessage(errorMessage);
-            builder.Create().Show();
+            if (errorMessage != "")
+            {
+                builder.SetMessage(errorMessage);
+                builder.Create().Show();
+            }
             return false;
         }
 

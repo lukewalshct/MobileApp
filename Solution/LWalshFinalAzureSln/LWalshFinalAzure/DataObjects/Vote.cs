@@ -10,6 +10,7 @@ namespace LWalshFinalAzure.DataObjects
         
         public ICollection<HouseholdMember> membersVoted { get; set; }
 
+        public string targetMemberName { get; set; }
         public string householdID { get; set; }
         
         public VoteType voteType { get; set; }

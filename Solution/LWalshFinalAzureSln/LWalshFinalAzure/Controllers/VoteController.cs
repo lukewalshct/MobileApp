@@ -35,15 +35,15 @@ namespace LWalshFinalAzure.Controllers
                         id = x.Id,
                         householdID = x.householdID,
                         voteType = x.voteType,
-                        targetMemberID = x.targetMemberID,
-                        targetMemberName = this.context.Users.Where(y => y.IDPUserID == x.targetMemberID).Single().firstName,                        
+                        targetMemberID = x.targetMemberID,                        
                         balanceChange = x.balanceChange,
                         isAnonymous = x.isAnonymous,
                         description = x.description,
                         votesFor = x.votesFor,
                         votesAgainst = x.votesAgainst,
                         votesNeeded = votesNeeded,
-                        voteStatus = x.voteStatus
+                        voteStatus = x.voteStatus,
+                        targetMemberName = x.targetMemberName
                     }));
             }
             else
@@ -115,6 +115,7 @@ namespace LWalshFinalAzure.Controllers
                         newVote.isAnonymous = v.isAnonymous;
                         newVote.membersVoted.Add(callMember);
                         newVote.targetMemberID = v.targetMemberID;
+                        newVote.targetMemberName = v.targetMemberName;
                         newVote.voteType = v.voteType;
                         newVote.voteStatus = "In Progress";
                         if (v.voteType == VoteType.NewMember)
