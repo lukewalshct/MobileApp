@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using LWalshFinalClient.Data_Models;
+using System.Threading.Tasks;
 
 namespace LWalshFinalClient.Resources
 {
@@ -17,6 +18,9 @@ namespace LWalshFinalClient.Resources
     {
         private IReadOnlyList<VoteListItem> voteListItems;
         private Activity context;
+        Button voteYesButton;
+        Button voteNoButton;        
+
         public VoteScrollAdapter(Activity context, IReadOnlyList<VoteListItem> voteListItems) : base() {
             this.context = context;
             this.voteListItems = voteListItems;
@@ -50,8 +54,39 @@ namespace LWalshFinalClient.Resources
             view.FindViewById<TextView>(Resource.Id.balanceChangeText).Text = "Balance change: " + this.voteListItems[position].balanceChange.ToString();
             view.FindViewById<TextView>(Resource.Id.statusText).Text = this.voteListItems[position].statusText;
             view.FindViewById<TextView>(Resource.Id.descriptionText).Text = this.voteListItems[position].description;
+            voteYesButton = view.FindViewById<Button>(Resource.Id.voteYesButton);
+            voteNoButton = view.FindViewById<Button>(Resource.Id.voteNoButton);
+
+            voteYesButton.Tag = position;
+            voteNoButton.Tag = position;
+
+            voteYesButton.Click += voteClick;
+            voteNoButton.Click += voteClick;
 
             return view;
+        }
+
+
+        private void voteClick(object sender, EventArgs e)
+        {
+            try
+            {
+                int position = int.Parse((((Button)sender).Tag).ToString());
+                VoteListItem item = this.voteListItems[position];
+
+                if (sender == this.voteYesButton)
+                {
+                    ((VoteActivity)this.context).sendVote(true, item.voteID);
+                }
+                else if (sender == this.voteNoButton)
+                {
+                    ((VoteActivity)this.context).sendVote(false, item.voteID);
+                }
+            }
+            catch
+            {
+
+            }
         }
     }
 }

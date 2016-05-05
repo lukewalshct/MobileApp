@@ -45,14 +45,14 @@
         android:layout_height="match_parent"
         android:id="@+id/linearLayout1">
         <Button
-            android:text="Button"
+            android:text="Vote Yes"
             android:layout_width="100.0dp"
             android:layout_height="50.5dp"
-            android:id="@+id/button1" />
+            android:id="@+id/voteYesButton" />
         <Button
-            android:text="Button"
+            android:text="Vote No"
             android:layout_width="100.0dp"
             android:layout_height="50.5dp"
-            android:id="@+id/button2" />
+            android:id="@+id/voteNoButton" />
     </LinearLayout>
 </LinearLayout>

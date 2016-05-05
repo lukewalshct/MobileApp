@@ -93,12 +93,6 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f05003c
 			public const int balanceChangeText = 2131034172;
 			
-			// aapt resource value: 0x7f05003f
-			public const int button1 = 2131034175;
-			
-			// aapt resource value: 0x7f050040
-			public const int button2 = 2131034176;
-			
 			// aapt resource value: 0x7f050034
 			public const int cancelButton = 2131034164;
 			
@@ -246,8 +240,14 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f050036
 			public const int voteListView = 2131034166;
 			
+			// aapt resource value: 0x7f050040
+			public const int voteNoButton = 2131034176;
+			
 			// aapt resource value: 0x7f05003b
 			public const int voteType = 2131034171;
+			
+			// aapt resource value: 0x7f05003f
+			public const int voteYesButton = 2131034175;
 			
 			// aapt resource value: 0x7f05001c
 			public const int votesButton = 2131034140;

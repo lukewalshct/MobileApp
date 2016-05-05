@@ -14,6 +14,7 @@ namespace LWalshFinalClient.Data_Models
 {
     class Vote
     {       
+        public string Id { get; set; }
 
         public string householdID { get; set; }
 

@@ -97,7 +97,6 @@
                 android:layout_column="0"
                 android:id="@+id/textView13" />
             <TextView
-                android:text="{Landlord Name}"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_column="1"
                 android:id="@+id/hhLandlordTextView" />

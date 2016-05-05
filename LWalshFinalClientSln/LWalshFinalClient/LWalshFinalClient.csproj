@@ -49,6 +49,7 @@
     <Compile Include="Data Models\HouseholdMember.cs" />
     <Compile Include="Data Models\User.cs" />
     <Compile Include="Data Models\Vote.cs" />
+    <Compile Include="Data Models\VoteCast.cs" />
     <Compile Include="Data Models\VoteListItem.cs" />
     <Compile Include="HttpAutoProxyHandler.cs" />
     <Compile Include="Activities\MainActivity.cs" />

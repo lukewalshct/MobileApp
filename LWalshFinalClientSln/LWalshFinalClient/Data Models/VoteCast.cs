@@ -12,18 +12,10 @@ using Android.Widget;
 
 namespace LWalshFinalClient.Data_Models
 {
-    class VoteListItem
-    {      
+    class VoteCast
+    {
         public string voteID { get; set; }
 
-        public string voteType { get; set; }
-
-        public string targetMember { get; set; }
-
-        public int balanceChange { get; set; }        
-
-        public string description { get; set; }
-
-        public string statusText { get; set; }        
+        public string vote { get; set; }
     }
 }
