@@ -462,58 +462,46 @@ namespace LWalshFinalClient
         
         public async Task<bool> sendVote(bool isYesVote, string voteID)
         {
-            string message = isYesVote ? "Voted Yes! " + voteID : "Voted No! " + voteID;
+            string message = "";
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.SetMessage(message);
-            builder.Create().Show();
-            //try
-            //{
-            //    Vote vote = new Vote();
+            try
+            {
+                VoteCast vote = new VoteCast();
+                vote.voteID = voteID;
+                string userVote = isYesVote ? "for" : "against";
+                vote.vote = userVote;                            
 
-            //    vote.targetMemberID = this.currentUserID;
-            //    if (this.currentUser != null)
-            //    {
-            //        vote.targetMemberName = this.currentUser.firstName;
-            //    }
-            //    vote.balanceChange = 0;
-            //    vote.description = "Request to join household";
-            //    vote.householdID = this.currentHHID;
-            //    vote.isAnonymous = false;
-            //    vote.voteType = VoteType.NewMember;
+                JToken payload = JObject.FromObject(vote);
+                JToken result = await this.client.InvokeApiAsync("vote/castvote", payload);
 
-            //    JToken payload = JObject.FromObject(vote);
-            //    JToken result = await this.client.InvokeApiAsync("vote/newvote", payload);
+                if (result.HasValues)
+                {
+                    message = "Successfully voted " + userVote + " the proposal!";
+                    builder.SetMessage(message);
+                    builder.Create().Show();                    
+                    return true;
+                }
+            }
+            catch (MobileServiceInvalidOperationException ex)
+            {
+                message = ex.Message;
+                builder.SetMessage(message);
+                builder.Create().Show();
+                return false;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                builder.SetMessage(message);
+                builder.Create().Show();
+                return false;
+            }
+            if (message != "")
+            {
+                builder.SetMessage(message);
+                builder.Create().Show();
+            }
 
-            //    if (result.HasValues)
-            //    {
-            //        message = "Successfully submitted request to join the household! The request will now appear in the household's" +
-            //            "vote list to all household members. All current household members must approve your request in order to join.";
-            //        builder.SetMessage(message);
-            //        builder.Create().Show();
-            //        //reset fields for next vote
-            //        return true;
-            //    }
-            //}
-            //catch (MobileServiceInvalidOperationException ex)
-            //{
-            //    message = ex.Message;
-            //    builder.SetMessage(message);
-            //    builder.Create().Show();
-            //    return false;
-            //}
-            //catch (Exception ex)
-            //{
-            //    message = ex.Message;
-            //    builder.SetMessage(message);
-            //    builder.Create().Show();
-            //    return false;
-            //}
-            //if (message != "")
-            //{
-            //    builder.SetMessage(message);
-            //    builder.Create().Show();
-            //}
-            
             return false;
         }
     }
