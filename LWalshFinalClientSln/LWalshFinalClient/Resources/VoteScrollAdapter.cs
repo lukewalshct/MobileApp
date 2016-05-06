@@ -59,7 +59,12 @@ namespace LWalshFinalClient.Resources
             voteNoButton = view.FindViewById<Button>(Resource.Id.voteNoButton);
             TextView disableReason = view.FindViewById<TextView>(Resource.Id.disableReason);
 
-            bool alreadyVoted = vItem.membersVotedIDs.Contains(((VoteActivity)this.context).currentUserID);
+            HouseholdMember member = ((VoteActivity)this.context).currentMember;
+            bool alreadyVoted = false;
+            if (member != null)
+            {
+                alreadyVoted = vItem.membersVotedIDs.Contains(member.Id);
+            }
             if (vItem.voteStatus != "In Progress" || alreadyVoted)
             {
                 voteYesButton.Enabled = false;
@@ -69,6 +74,8 @@ namespace LWalshFinalClient.Resources
             }
             else
             {
+                voteYesButton.Enabled = true;
+                voteNoButton.Enabled = true;
                 disableReason.Visibility = ViewStates.Invisible;
             }
 

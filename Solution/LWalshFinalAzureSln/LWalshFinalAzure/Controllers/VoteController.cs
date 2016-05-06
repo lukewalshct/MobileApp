@@ -23,12 +23,17 @@ namespace LWalshFinalAzure.Controllers
         [ActionName("byhhid")]
         public HttpResponseMessage GetVotes(string id)
         {
-            Household hh = this.context.Households.Include("votes").Include("members").Where(x => x.Id == id).SingleOrDefault();
+            Household hh = this.context.Households.Include("votes").Include("members").Include("votes.membersVoted").Where(x => x.Id == id).SingleOrDefault();
 
             if (hh != null)
             {
                 int votesNeeded = (int) Math.Round((((double)hh.members.Count) / 2), 0, MidpointRounding.AwayFromZero);
-                List<Vote> votes = hh.votes.ToList();
+
+                if (votesNeeded != hh.members.Count)
+                {
+                    votesNeeded += 1;
+                }
+                //List<HouseholdMember> votes = hh.votes.Select(x => x.membersVoted).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK,
                     hh.votes.Select(x => new
                     {
@@ -44,7 +49,7 @@ namespace LWalshFinalAzure.Controllers
                         votesNeeded = votesNeeded,
                         voteStatus = x.voteStatus,
                         targetMemberName = x.targetMemberName,
-                        membersVoted = x.membersVoted.Select(y => y.Id).ToList()                        
+                        membersVoted = x.membersVoted.ToList().Select(y => y.Id).ToList()                        
                     }));
             }
             else
@@ -230,6 +235,11 @@ namespace LWalshFinalAzure.Controllers
             //check to see if the vote reached its threshold
             int votesNeeded = (int)Math.Round((((double)hh.members.Count) / 2), 0, MidpointRounding.AwayFromZero);
 
+            if (votesNeeded != hh.members.Count)
+            {
+                votesNeeded += 1;
+            }
+
             if(v.votesFor >= votesNeeded)
             {
                 v.voteStatus = "Passed";
@@ -240,6 +250,13 @@ namespace LWalshFinalAzure.Controllers
                     if(!karmaVotePass(hh, v))
                     {
                         return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "The vote was cast successfully but the target member no longer exists." });
+                    }
+                }
+                else if (v.voteType == VoteType.NewMember)
+                {
+                    if(!newMemberVotePass(hh, v))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "The vote was cast successfully but the target user no longer exists." });
                     }
                 }
                 this.context.SaveChanges();
@@ -259,7 +276,8 @@ namespace LWalshFinalAzure.Controllers
 
         private bool karmaVotePass(Household hh, Vote v)
         {
-            HouseholdMember targetMember = hh.members.Where(x => x.Id == v.targetMemberID).SingleOrDefault();
+            
+            HouseholdMember targetMember = hh.members.Where(x => x.userId == v.targetMemberID).SingleOrDefault();
 
             if (targetMember == null)
             {
@@ -276,6 +294,39 @@ namespace LWalshFinalAzure.Controllers
             {
                 m.karma += (otherMembersKarmaChange);
             }
+            this.context.SaveChanges();
+            return true;
+        }
+
+        private bool newMemberVotePass(Household hh, Vote v)
+        {
+            User targetUser = this.context.Users.Where(x => x.IDPUserID == v.targetMemberID).SingleOrDefault();
+
+            if (targetUser == null)
+            {
+                return false;
+            }
+
+            //create new member 
+            HouseholdMember newMember = new HouseholdMember();
+            newMember.IDPUserId = "Facebook:" + targetUser.IDPUserID;
+            newMember.Id = Guid.NewGuid().ToString();
+            newMember.isLandlord = false;
+            newMember.isApproveVote = false;
+            newMember.isEvictVote = false;
+            newMember.isLandlordVote = false;
+            newMember.karma = 0;
+            newMember.firstName = targetUser.firstName;
+            newMember.lastName = targetUser.lastName;
+            newMember.status = Status.Approved;
+            newMember.userId = targetUser.Id;
+            newMember.householdId = hh.Id;
+
+            //add relationships
+            targetUser.memberships.Add(newMember);
+            hh.members.Add(newMember);
+
+            this.context.HouseholdMembers.Add(newMember);
             this.context.SaveChanges();
             return true;
         }

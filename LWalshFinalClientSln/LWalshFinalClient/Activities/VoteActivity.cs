@@ -44,7 +44,7 @@ namespace LWalshFinalClient
         Household currentHousehold;
         List<HouseholdMember> members;
         List<Vote> householdVotes;
-        HouseholdMember currentMember;
+        public HouseholdMember currentMember;
         ListView voteListView;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -283,7 +283,7 @@ namespace LWalshFinalClient
                     foreach (var m in membersJArray)
                     {
                         HouseholdMember member = new HouseholdMember();
-
+                        member.Id = (string)((JObject)m)["id"];
                         member.firstName = (string)((JObject)m)["firstName"];
                         member.lastName = (string)((JObject)m)["lastName"];
                         member.status = (string)((JObject)m)["status"];
@@ -325,7 +325,7 @@ namespace LWalshFinalClient
                 if (m.HasValues)
                 {
                     this.currentMember = new HouseholdMember();
-
+                    this.currentMember.Id = (string)((JObject)m)["id"];
                     this.currentMember.firstName = (string)((JObject)m)["firstName"];
                     this.currentMember.lastName = (string)((JObject)m)["lastName"];
                     this.currentMember.status = (string)((JObject)m)["status"];
@@ -409,7 +409,7 @@ namespace LWalshFinalClient
 
                         foreach(var m in membersVoted)
                         {
-                            string memberID = (string)((JObject)m["IDPUserID"]);
+                            string memberID = m.Value<string>();
                             newVote.membersVotedIDs.Add(memberID);
                         }
                         this.householdVotes.Add(newVote);
