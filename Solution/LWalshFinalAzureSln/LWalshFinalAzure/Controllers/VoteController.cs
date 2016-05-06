@@ -28,7 +28,7 @@ namespace LWalshFinalAzure.Controllers
             if (hh != null)
             {
                 int votesNeeded = (int) Math.Round((((double)hh.members.Count) / 2), 0, MidpointRounding.AwayFromZero);
-
+                List<Vote> votes = hh.votes.ToList();
                 return Request.CreateResponse(HttpStatusCode.OK,
                     hh.votes.Select(x => new
                     {
@@ -43,7 +43,8 @@ namespace LWalshFinalAzure.Controllers
                         votesAgainst = x.votesAgainst,
                         votesNeeded = votesNeeded,
                         voteStatus = x.voteStatus,
-                        targetMemberName = x.targetMemberName
+                        targetMemberName = x.targetMemberName,
+                        membersVoted = x.membersVoted.Select(y => y.Id).ToList()                        
                     }));
             }
             else

@@ -124,6 +124,7 @@ namespace LWalshFinalAzure.Controllers
 
                 //create new member (caller)
                 HouseholdMember newMember = new HouseholdMember();
+                newMember.IDPUserId = "Facebook:" + userInfo.IDPUserId;
                 newMember.Id = Guid.NewGuid().ToString();
                 newMember.isLandlord = true;
                 newMember.isApproveVote = false;

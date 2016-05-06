@@ -23,7 +23,7 @@ namespace LWalshFinalAzure.DataObjects
         public bool isApproveVote { get; set; }
         public string userId { get; set; }
         public string householdId { get; set; }
-
+        public string IDPUserId { get; set; }
         public ICollection<Vote> votes { get; set; }
 
         public HouseholdMember()

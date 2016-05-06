@@ -13,7 +13,7 @@ using Android.Widget;
 namespace LWalshFinalClient.Data_Models
 {
     class Vote
-    {       
+    {
         public string Id { get; set; }
 
         public string householdID { get; set; }
@@ -37,6 +37,13 @@ namespace LWalshFinalClient.Data_Models
         public int votesNeeded { get; set; }
 
         public string targetMemberName { get; set; }
+
+        public List<string> membersVotedIDs {get; set;}
+
+        public Vote()
+        {
+            this.membersVotedIDs = new List<string>();
+        }
 
     }
 

@@ -403,6 +403,15 @@ namespace LWalshFinalClient
                         newVote.votesNeeded = (int)v["votesNeeded"];
                         newVote.Id = (string)v["id"];
                         newVote.voteStatus = (string)v["voteStatus"];
+
+                        //parse members voted
+                        JArray membersVoted = (JArray)v["membersVoted"];
+
+                        foreach(var m in membersVoted)
+                        {
+                            string memberID = (string)((JObject)m["IDPUserID"]);
+                            newVote.membersVotedIDs.Add(memberID);
+                        }
                         this.householdVotes.Add(newVote);
                     }
                     return true;
@@ -434,6 +443,7 @@ namespace LWalshFinalClient
                     List<VoteListItem> voteListItems = this.householdVotes.Select(x =>
                         new VoteListItem
                         {
+                            membersVotedIDs =  x.membersVotedIDs,
                             voteID = x.Id,
                             targetMember = x.targetMemberName,
                             voteType = x.voteType.ToString(),

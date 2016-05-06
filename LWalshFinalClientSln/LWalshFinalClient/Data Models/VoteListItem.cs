@@ -27,5 +27,12 @@ namespace LWalshFinalClient.Data_Models
         public string statusText { get; set; }   
         
         public string voteStatus { get; set; }     
+
+        public List<string> membersVotedIDs { get; set; }
+
+        public VoteListItem()
+        {
+            membersVotedIDs = new List<string>();
+        }
     }
 }
