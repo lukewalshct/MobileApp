@@ -88,7 +88,7 @@ namespace LWalshFinalClient
             updateDisplay();
         }
 
-        private async void updateDisplay()
+        public async void updateDisplay()
         {
             this.proposeTableLayout.Visibility = ViewStates.Gone;
             this.submitButtonsLayout.Visibility = ViewStates.Gone;
@@ -401,8 +401,8 @@ namespace LWalshFinalClient
                         newVote.votesAgainst = (int)v["votesAgainst"];
                         newVote.voteStatus = (string)v["voteStatus"];
                         newVote.votesNeeded = (int)v["votesNeeded"];
-                        newVote.Id = (string)v["id"];                    
-
+                        newVote.Id = (string)v["id"];
+                        newVote.voteStatus = (string)v["voteStatus"];
                         this.householdVotes.Add(newVote);
                     }
                     return true;
@@ -439,6 +439,7 @@ namespace LWalshFinalClient
                             voteType = x.voteType.ToString(),
                             balanceChange = x.balanceChange,
                             description = x.description,
+                            voteStatus = x.voteStatus,
                             statusText = x.votesFor + " votes for, " + x.votesAgainst + " against (" + x.votesNeeded + " needed)"
                         }).ToList();
                     VoteScrollAdapter votesAdapter = new VoteScrollAdapter(this, voteListItems);

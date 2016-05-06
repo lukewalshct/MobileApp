@@ -49,13 +49,28 @@ namespace LWalshFinalClient.Resources
             //var contactName = view.FindViewById<TextView>(Resource.Id.ContactName);
             //var contactImage = view.FindViewById<ImageView>(Resource.Id.ContactImage);
             //contactName.Text = this.voteListItems[position].targetMember;
-            view.FindViewById<TextView>(Resource.Id.memberName).Text = this.voteListItems[position].targetMember;
-            view.FindViewById<TextView>(Resource.Id.voteType).Text = "Type of vote: " + this.voteListItems[position].voteType;
-            view.FindViewById<TextView>(Resource.Id.balanceChangeText).Text = "Balance change: " + this.voteListItems[position].balanceChange.ToString();
-            view.FindViewById<TextView>(Resource.Id.statusText).Text = this.voteListItems[position].statusText;
-            view.FindViewById<TextView>(Resource.Id.descriptionText).Text = this.voteListItems[position].description;
+            VoteListItem vItem = this.voteListItems[position];
+            view.FindViewById<TextView>(Resource.Id.memberName).Text = vItem.targetMember;
+            view.FindViewById<TextView>(Resource.Id.voteType).Text = "Type of vote: " + vItem.voteType;       
+            view.FindViewById<TextView>(Resource.Id.balanceChangeText).Text = "Balance change: " + vItem.balanceChange.ToString();
+            view.FindViewById<TextView>(Resource.Id.statusText).Text = vItem.voteStatus  + ": " + vItem.statusText;
+            view.FindViewById<TextView>(Resource.Id.descriptionText).Text = vItem.description;
             voteYesButton = view.FindViewById<Button>(Resource.Id.voteYesButton);
             voteNoButton = view.FindViewById<Button>(Resource.Id.voteNoButton);
+            TextView disableReason = view.FindViewById<TextView>(Resource.Id.disableReason);
+                        
+            if (vItem.voteStatus != "In Progress")
+            {
+                voteYesButton.Enabled = false;
+                voteNoButton.Enabled = false;
+                disableReason.Text = "Voting ended";
+                disableReason.Visibility = ViewStates.Visible;
+            }
+            else
+            {
+                disableReason.Visibility = ViewStates.Invisible;
+            }
+
 
             voteYesButton.Tag = position;
             voteNoButton.Tag = position;
@@ -87,6 +102,7 @@ namespace LWalshFinalClient.Resources
             {
 
             }
+            ((VoteActivity)this.context).updateDisplay();
         }
     }
 }

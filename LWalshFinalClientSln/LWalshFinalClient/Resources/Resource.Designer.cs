@@ -111,6 +111,9 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f05003e
 			public const int descriptionText = 2131034174;
 			
+			// aapt resource value: 0x7f050041
+			public const int disableReason = 2131034177;
+			
 			// aapt resource value: 0x7f050005
 			public const int editSaveButton = 2131034117;
 			

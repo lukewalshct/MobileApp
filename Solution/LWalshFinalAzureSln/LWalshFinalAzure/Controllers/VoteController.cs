@@ -171,9 +171,13 @@ namespace LWalshFinalAzure.Controllers
             IDPTransaction idpTransaction = new IDPTransaction(this.Request, this.ConfigSettings, this.Configuration);
             ExtendedUserInfo userInfo = await idpTransaction.GetIDPInfo();
 
-            User u = this.context.Users.Where(x => x.IDPUserID == userInfo.IDPUserId).SingleOrDefault(); 
+            User u = this.context.Users.Where(x => x.IDPUserID == "Facebook:" + userInfo.IDPUserId).SingleOrDefault(); 
             Vote v = this.context.Votes.Include("membersVoted").Where(x => x.Id == vc.voteId).SingleOrDefault();
 
+            if (u == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Denied. Unable to find an existing user for the id" });
+            }
             //check to ensure the vote exists
             if (v == null)
             {
@@ -237,17 +241,19 @@ namespace LWalshFinalAzure.Controllers
                         return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "The vote was cast successfully but the target member no longer exists." });
                     }
                 }
-                return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Vote cast! The proposal has passed!" });
+                this.context.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Vote cast! The proposal has passed!" });
             }
             else if (v.votesAgainst >= votesNeeded)
             {
                 v.voteStatus = "Failed";
                 //trigger push notification code
-                return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Vote cast! The proposal has failed!" });
+                this.context.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Vote cast! The proposal has failed!" });
             }
 
             this.context.SaveChanges();
-            return Request.CreateResponse(HttpStatusCode.BadRequest, new { Message = "Vote cast!"});
+            return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Vote cast!"});
         }
 
         private bool karmaVotePass(Household hh, Vote v)

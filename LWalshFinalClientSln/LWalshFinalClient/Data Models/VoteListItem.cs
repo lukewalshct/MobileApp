@@ -24,6 +24,8 @@ namespace LWalshFinalClient.Data_Models
 
         public string description { get; set; }
 
-        public string statusText { get; set; }        
+        public string statusText { get; set; }   
+        
+        public string voteStatus { get; set; }     
     }
 }

@@ -54,5 +54,10 @@
             android:layout_width="100.0dp"
             android:layout_height="50.5dp"
             android:id="@+id/voteNoButton" />
+        <TextView
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/disableReason" />
     </LinearLayout>
 </LinearLayout>
