@@ -67,7 +67,7 @@ namespace LWalshFinalAzure.Controllers
             if (v != null)
             {
                 //check to ensure that the household exists, else return bad request
-                Household hh = this.context.Households.Where(x => x.Id == v.householdID).SingleOrDefault();
+                Household hh = this.context.Households.Include("votes").Where(x => x.Id == v.householdID).SingleOrDefault();
                 if (hh != null)
                 {
                     //check to ensure calling and target household members exist and is part of the household
@@ -101,15 +101,32 @@ namespace LWalshFinalAzure.Controllers
                             if (targetMember.isEvictVote)
                             {
                                 return Request.CreateResponse(HttpStatusCode.BadRequest, new {
-                                    Message = "Target member is already under vote for eviction"});
+                                    Message = "Denied. Target member is already under vote for eviction."});
                             }
                             targetMember.isEvictVote = true;
                         }
-                        //if new member vote, make sure the user isn't already a member
-                        if(v.voteType == VoteType.NewMember && hh.members.Contains(targetMember))
+                        //if new member vote, make sure the user isn't already a member or has newmember vote
+                        if(v.voteType == VoteType.NewMember)
                         {
-                            return Request.CreateResponse(HttpStatusCode.BadRequest, new {
-                                Message = "Target member is already in the household"});
+                            if (hh.members.Contains(targetMember))
+                            {
+                                return Request.CreateResponse(HttpStatusCode.BadRequest, new
+                                {
+                                    Message = "Denied. Member is already in the household."
+                                });
+                            }
+
+                            List<Vote> newMemberVotes = hh.votes.Where(x => x.voteType == VoteType.NewMember &&
+                                x.targetMemberID == v.targetMemberID && x.voteStatus == "In Progress").ToList();
+
+                            if (newMemberVotes.Count > 0)
+                            {
+                                return Request.CreateResponse(HttpStatusCode.BadRequest, new
+                                {
+                                    Message = "You already requested to join the household and a vote is in progress." +
+                                        " All members must approve your membership."
+                                });
+                            }
                         }
 
                         Vote newVote = new Vote();
@@ -286,8 +303,8 @@ namespace LWalshFinalAzure.Controllers
 
             targetMember.karma += v.balanceChange;
 
-            List<HouseholdMember> otherMembers = hh.members.Where(x => x.Id != v.targetMemberID).ToList();
-            int numOtherMembers = hh.members.Count() - 1;
+            List<HouseholdMember> otherMembers = hh.members.Where(x => x.Id != targetMember.Id).ToList();
+            int numOtherMembers = otherMembers.Count();
             double otherMembersKarmaChange = -1*((double)v.balanceChange) / numOtherMembers;
 
             foreach (HouseholdMember m in otherMembers)

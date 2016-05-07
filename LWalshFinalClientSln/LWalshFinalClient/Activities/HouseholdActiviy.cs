@@ -16,6 +16,9 @@ using System.Net.Http;
 using LWalshFinalClient.Resources;
 using Android.Graphics;
 using LWalshFinalClient.Data_Models;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace LWalshFinalClient
 {
@@ -199,13 +202,14 @@ namespace LWalshFinalClient
             }
             catch (MobileServiceInvalidOperationException ex)
             {
-                message = ex.Message;
+                message = await getMobileServiceExceptionMessage(ex);
                 builder.SetMessage(message);
                 builder.Create().Show();
                 return false;
             }
             catch (Exception ex)
             {
+
                 message = ex.Message;
                 builder.SetMessage(message);
                 builder.Create().Show();
@@ -217,6 +221,19 @@ namespace LWalshFinalClient
                 builder.Create().Show();
             }
             return false;
+        }
+
+        private async Task<string> getMobileServiceExceptionMessage(MobileServiceInvalidOperationException ex)
+        {
+            string message = "";
+            HttpResponseMessage response = ex.Response;
+            if (response != null)
+            {
+                string jsonString = await response.Content.ReadAsStringAsync();
+                JObject jObject = JsonConvert.DeserializeObject<JObject>(jsonString);
+                message = (string)jObject["message"];
+            }
+            return message;
         }
 
         private async void saveEditClick(Object sender, EventArgs e)
@@ -262,7 +279,7 @@ namespace LWalshFinalClient
             }
             catch (MobileServiceInvalidOperationException ex)
             {
-                message = ex.Message;
+                message = await getMobileServiceExceptionMessage(ex);
                 builder.SetMessage(message);
                 builder.Create().Show();
                 return false;
@@ -331,7 +348,7 @@ namespace LWalshFinalClient
             }
             catch (MobileServiceInvalidOperationException ex)
             {
-                errorMessage = ex.Message;
+                errorMessage = await getMobileServiceExceptionMessage(ex);
             }
             catch (Exception ex)
             {
@@ -367,7 +384,7 @@ namespace LWalshFinalClient
             }
             catch (MobileServiceInvalidOperationException ex)
             {
-                errorMessage = ex.Message;
+                errorMessage = await getMobileServiceExceptionMessage(ex);
             }
             catch (Exception ex)
             {
@@ -410,7 +427,7 @@ namespace LWalshFinalClient
             }
             catch (MobileServiceInvalidOperationException ex)
             {
-                errorMessage = ex.Message;
+                errorMessage = await getMobileServiceExceptionMessage(ex);
             }
             catch (Exception ex)
             {
