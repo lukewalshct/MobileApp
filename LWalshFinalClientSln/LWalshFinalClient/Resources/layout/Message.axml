@@ -3,19 +3,50 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Button
-        android:text="Household Info"
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow
+            android:id="@+id/tableRow1">
+            <Button
+                android:text="Household"
+                android:id="@+id/HHInfoButton"
+                android:layout_column="0"
+                android:layout_width="121.0dp" />
+            <Button
+                android:text="Voting"
+                android:id="@+id/votesButton"
+                android:layout_column="1"
+                android:layout_width="133.5dp" />
+            <Button
+                android:text="Home"
+                android:id="@+id/homeButton"
+                android:layout_column="2"
+                android:layout_width="128.5dp" />
+        </TableRow>
+    </TableLayout>
+    <ListView
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="362.5dp"
+        android:id="@+id/listView1" />
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/HHInfoButton" />
-    <Button
-        android:text="Proposals Under Vote"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/votesButton" />
-    <Button
-        android:text="Home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/homeButton" />
+        android:id="@+id/linearLayout1">
+        <MultiAutoCompleteTextView
+            android:id="@+id/multiAutoCompleteTextView1"
+            android:layout_width="297.0dp"
+            android:layout_height="103.0dp" />
+        <Button
+            android:text="Send"
+            android:textSize="12.0sp"
+            android:gravity="bottom"
+            android:layout_width="74.0dp"
+            android:layout_height="48.5dp"
+            android:id="@+id/sendButton" />
+    </LinearLayout>
 </LinearLayout>

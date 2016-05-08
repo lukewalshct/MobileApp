@@ -20,6 +20,8 @@ namespace LWalshFinalClient
         Button homeButton;
         Button votesButton;
         Button householdInfoButton;
+        public string currentUserID { get; set; }
+        public string currentHHID { get; set; }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -41,12 +43,59 @@ namespace LWalshFinalClient
             this.votesButton.Click += navigationClick;
             this.householdInfoButton.Click += navigationClick;
 
-            string text = this.Intent.GetStringExtra("MyData") ?? "Data not available";
+            getIntentParameters();
+            updateDisplay();
+        }
+
+        private void getIntentParameters()
+        {
+            if (this.Intent.Extras != null)
+            {
+                this.currentUserID = this.Intent.Extras.GetString("currentUserID");
+                this.currentHHID = this.Intent.Extras.GetString("currentHHID");
+                //recreate the authenticated user and add it to the client
+                string clientUserID = this.Intent.Extras.GetString("clientUserID");
+                this.client.CurrentUser = new MobileServiceUser(clientUserID);
+                this.client.CurrentUser.MobileServiceAuthenticationToken = this.Intent.Extras.GetString("clientAuthToken");
+            }
+        }
+
+        private void updateDisplay()
+        {
+
         }
 
         private void navigationClick(Object sender, EventArgs e)
         {
+            Type activityType = null;
 
+            if (sender == this.homeButton)
+            {
+                activityType = typeof(MainActivity);
+            }
+            else if (sender == this.votesButton)
+            {
+                activityType = typeof(VoteActivity);
+            }
+            else if (sender == this.householdInfoButton)
+            {
+                activityType = typeof(HouseholdActiviy);
+            }
+
+            Intent newActivity = new Intent(this, activityType);
+            var bundle = new Bundle();
+            bundle.PutString("isLoggedIn", "true");
+            bundle.PutString("currentUserID", this.currentUserID);
+            bundle.PutString("currentHHID", this.currentHHID);
+            //serialize the mobilserivce client so user data stays intact
+            //var clientJson = new JavaScriptSerializer().Serialize(this.client);
+            //bundle.PutString("client", clientJson);
+            bundle.PutString("clientUserID", this.client.CurrentUser.UserId);
+            bundle.PutString("clientAuthToken", this.client.CurrentUser.MobileServiceAuthenticationToken);
+            newActivity.PutExtras(bundle);
+
+            //newActivity.PutExtra("MyData", "Data from Activity1");
+            StartActivity(newActivity);
         }
     }
 }
