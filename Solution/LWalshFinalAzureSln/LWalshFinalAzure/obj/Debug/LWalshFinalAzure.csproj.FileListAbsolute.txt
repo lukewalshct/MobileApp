@@ -272,3 +272,7 @@ C:\Mobile and Cloud Computing\MobileApp\Solution\LWalshFinalAzureSln\LWalshFinal
 C:\Mobile and Cloud Computing\MobileApp\Solution\LWalshFinalAzureSln\LWalshFinalAzure\obj\Debug\LWalshFinalAzure.csprojResolveAssemblyReference.cache
 C:\Mobile and Cloud Computing\MobileApp\Solution\LWalshFinalAzureSln\LWalshFinalAzure\obj\Debug\LWalshFinalAzure.dll
 C:\Mobile and Cloud Computing\MobileApp\Solution\LWalshFinalAzureSln\LWalshFinalAzure\obj\Debug\LWalshFinalAzure.pdb
+C:\Users\Luke\Documents\CSCI 64 Mobile and Cloud Computing\Homework\Final Project\Solution\LWalshFinalAzureSln\LWalshFinalAzure\bin\Microsoft.Azure.Documents.ServiceInterop.dll
+C:\Users\Luke\Documents\CSCI 64 Mobile and Cloud Computing\Homework\Final Project\Solution\LWalshFinalAzureSln\LWalshFinalAzure\bin\DocumentDB.Spatial.Sql.dll
+C:\Users\Luke\Documents\CSCI 64 Mobile and Cloud Computing\Homework\Final Project\Solution\LWalshFinalAzureSln\LWalshFinalAzure\bin\Microsoft.Azure.Documents.Client.dll
+C:\Users\Luke\Documents\CSCI 64 Mobile and Cloud Computing\Homework\Final Project\Solution\LWalshFinalAzureSln\LWalshFinalAzure\bin\Microsoft.Azure.Documents.Client.xml
