@@ -9,6 +9,8 @@ namespace LWalshFinalAzure.DataObjects
     {
         public string id { get; set; }
 
+        public string memberName { get; set; }
+
         public string hhid { get; set; }
 
         public string userid { get; set; }

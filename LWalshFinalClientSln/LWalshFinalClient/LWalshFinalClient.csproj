@@ -47,6 +47,8 @@
     <Compile Include="Data Models\Household.cs" />
     <Compile Include="Activities\HouseholdActiviy.cs" />
     <Compile Include="Data Models\HouseholdMember.cs" />
+    <Compile Include="Data Models\Message.cs" />
+    <Compile Include="Data Models\MessageListItem.cs" />
     <Compile Include="Data Models\User.cs" />
     <Compile Include="Data Models\Vote.cs" />
     <Compile Include="Data Models\VoteCast.cs" />
@@ -55,6 +57,7 @@
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Data Models\MemberListItem.cs" />
     <Compile Include="Activities\MessageActivity.cs" />
+    <Compile Include="Resources\MessageScrollAdapter.cs" />
     <Compile Include="Resources\HHScrollAdapter.cs" />
     <Compile Include="Resources\MemberScrollAdapter.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -83,6 +86,9 @@
       <SubType>AndroidResource</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\VoteListItem.axml">
+      <SubType>AndroidResource</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\MessageListItem.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
   </ItemGroup>

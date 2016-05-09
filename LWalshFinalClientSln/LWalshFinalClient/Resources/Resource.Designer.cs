@@ -69,8 +69,8 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f050029
 			public const int HHInfoButton = 2131034153;
 			
-			// aapt resource value: 0x7f05003b
-			public const int HHInfoButtonVote = 2131034171;
+			// aapt resource value: 0x7f05003e
+			public const int HHInfoButtonVote = 2131034174;
 			
 			// aapt resource value: 0x7f050026
 			public const int HHLandlord = 2131034150;
@@ -81,20 +81,20 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f050025
 			public const int HHName = 2131034149;
 			
-			// aapt resource value: 0x7f050036
-			public const int anonCheckBox = 2131034166;
+			// aapt resource value: 0x7f050039
+			public const int anonCheckBox = 2131034169;
 			
 			// aapt resource value: 0x7f05000e
 			public const int asdfas = 2131034126;
 			
-			// aapt resource value: 0x7f050033
-			public const int balanceChangeEditText = 2131034163;
+			// aapt resource value: 0x7f050036
+			public const int balanceChangeEditText = 2131034166;
 			
-			// aapt resource value: 0x7f05003f
-			public const int balanceChangeText = 2131034175;
+			// aapt resource value: 0x7f050042
+			public const int balanceChangeText = 2131034178;
 			
-			// aapt resource value: 0x7f050038
-			public const int cancelButton = 2131034168;
+			// aapt resource value: 0x7f05003b
+			public const int cancelButton = 2131034171;
 			
 			// aapt resource value: 0x7f050004
 			public const int cancelEditButton = 2131034116;
@@ -105,14 +105,14 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f05000b
 			public const int dafsas = 2131034123;
 			
-			// aapt resource value: 0x7f050035
-			public const int descriptionEditText = 2131034165;
-			
-			// aapt resource value: 0x7f050041
-			public const int descriptionText = 2131034177;
+			// aapt resource value: 0x7f050038
+			public const int descriptionEditText = 2131034168;
 			
 			// aapt resource value: 0x7f050044
-			public const int disableReason = 2131034180;
+			public const int descriptionText = 2131034180;
+			
+			// aapt resource value: 0x7f050047
+			public const int disableReason = 2131034183;
 			
 			// aapt resource value: 0x7f050005
 			public const int editSaveButton = 2131034117;
@@ -141,8 +141,8 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f05001e
 			public const int homeButton = 2131034142;
 			
-			// aapt resource value: 0x7f05003d
-			public const int homeButtonVote = 2131034173;
+			// aapt resource value: 0x7f050040
+			public const int homeButtonVote = 2131034176;
 			
 			// aapt resource value: 0x7f05001b
 			public const int joinButton = 2131034139;
@@ -159,8 +159,8 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f050027
 			public const int loginButton = 2131034151;
 			
-			// aapt resource value: 0x7f050030
-			public const int mediumText = 2131034160;
+			// aapt resource value: 0x7f050033
+			public const int mediumText = 2131034163;
 			
 			// aapt resource value: 0x7f05001a
 			public const int memberBalance = 2131034138;
@@ -171,23 +171,26 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f050019
 			public const int memberName = 2131034137;
 			
-			// aapt resource value: 0x7f050031
-			public const int memberSpinner = 2131034161;
+			// aapt resource value: 0x7f050034
+			public const int memberSpinner = 2131034164;
+			
+			// aapt resource value: 0x7f05002c
+			public const int messageEntryText = 2131034156;
+			
+			// aapt resource value: 0x7f05002e
+			public const int messageText = 2131034158;
 			
 			// aapt resource value: 0x7f05001d
 			public const int messagesButton = 2131034141;
 			
-			// aapt resource value: 0x7f05003c
-			public const int messagesButtonVote = 2131034172;
+			// aapt resource value: 0x7f05003f
+			public const int messagesButtonVote = 2131034175;
 			
-			// aapt resource value: 0x7f05002c
-			public const int multiAutoCompleteTextView1 = 2131034156;
+			// aapt resource value: 0x7f050031
+			public const int proposalButton = 2131034161;
 			
-			// aapt resource value: 0x7f05002e
-			public const int proposalButton = 2131034158;
-			
-			// aapt resource value: 0x7f05002f
-			public const int proposeVoteTable = 2131034159;
+			// aapt resource value: 0x7f050032
+			public const int proposeVoteTable = 2131034162;
 			
 			// aapt resource value: 0x7f050028
 			public const int quitButton = 2131034152;
@@ -195,14 +198,17 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f05002d
 			public const int sendButton = 2131034157;
 			
-			// aapt resource value: 0x7f050040
-			public const int statusText = 2131034176;
+			// aapt resource value: 0x7f05002f
+			public const int senderText = 2131034159;
 			
-			// aapt resource value: 0x7f050039
-			public const int submitButton = 2131034169;
+			// aapt resource value: 0x7f050043
+			public const int statusText = 2131034179;
 			
-			// aapt resource value: 0x7f050037
-			public const int submitLayout = 2131034167;
+			// aapt resource value: 0x7f05003c
+			public const int submitButton = 2131034172;
+			
+			// aapt resource value: 0x7f05003a
+			public const int submitLayout = 2131034170;
 			
 			// aapt resource value: 0x7f050009
 			public const int tableLayout1 = 2131034121;
@@ -228,8 +234,8 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f050008
 			public const int textView10 = 2131034120;
 			
-			// aapt resource value: 0x7f050034
-			public const int textView12 = 2131034164;
+			// aapt resource value: 0x7f050037
+			public const int textView12 = 2131034167;
 			
 			// aapt resource value: 0x7f050014
 			public const int textView13 = 2131034132;
@@ -243,23 +249,26 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f050003
 			public const int textView23 = 2131034115;
 			
-			// aapt resource value: 0x7f050032
-			public const int textView9 = 2131034162;
+			// aapt resource value: 0x7f050035
+			public const int textView9 = 2131034165;
+			
+			// aapt resource value: 0x7f050030
+			public const int timText = 2131034160;
 			
 			// aapt resource value: 0x7f050006
 			public const int userTitleLayout = 2131034118;
 			
-			// aapt resource value: 0x7f05003a
-			public const int voteListView = 2131034170;
+			// aapt resource value: 0x7f05003d
+			public const int voteListView = 2131034173;
 			
-			// aapt resource value: 0x7f050043
-			public const int voteNoButton = 2131034179;
+			// aapt resource value: 0x7f050046
+			public const int voteNoButton = 2131034182;
 			
-			// aapt resource value: 0x7f05003e
-			public const int voteType = 2131034174;
+			// aapt resource value: 0x7f050041
+			public const int voteType = 2131034177;
 			
-			// aapt resource value: 0x7f050042
-			public const int voteYesButton = 2131034178;
+			// aapt resource value: 0x7f050045
+			public const int voteYesButton = 2131034181;
 			
 			// aapt resource value: 0x7f05001c
 			public const int votesButton = 2131034140;
@@ -293,10 +302,13 @@ namespace LWalshFinalClient
 			public const int Message = 2130903043;
 			
 			// aapt resource value: 0x7f030004
-			public const int Vote = 2130903044;
+			public const int MessageListItem = 2130903044;
 			
 			// aapt resource value: 0x7f030005
-			public const int VoteListItem = 2130903045;
+			public const int Vote = 2130903045;
+			
+			// aapt resource value: 0x7f030006
+			public const int VoteListItem = 2130903046;
 			
 			static Layout()
 			{

@@ -30,7 +30,7 @@
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
-        android:layout_height="362.5dp"
+        android:layout_height="350.0dp"
         android:id="@+id/listView1" />
     <LinearLayout
         android:orientation="horizontal"
@@ -38,13 +38,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout1">
         <MultiAutoCompleteTextView
-            android:id="@+id/multiAutoCompleteTextView1"
+            android:id="@+id/messageEntryText"
             android:layout_width="297.0dp"
-            android:layout_height="103.0dp" />
+            android:gravity="bottom"
+            android:layout_height="132.0dp" />
         <Button
             android:text="Send"
             android:textSize="12.0sp"
-            android:gravity="bottom"
+            android:layout_gravity="bottom"
             android:layout_width="74.0dp"
             android:layout_height="48.5dp"
             android:id="@+id/sendButton" />
