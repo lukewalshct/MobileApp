@@ -110,6 +110,7 @@ namespace LWalshFinalClient
                     newMessage.hhid = this.currentHHID;
                     newMessage.userid = this.currentUserID;
                     newMessage.message = this.messageEditText.Text;
+                    newMessage.timeStamp = DateTime.Now.ToLocalTime().ToString();
                     
                     JToken payload = JObject.FromObject(newMessage);
                     JToken result = await this.client.InvokeApiAsync("message", payload);

@@ -14,6 +14,8 @@ namespace LWalshFinalAzure.DataObjects
         public string hhid { get; set; }
 
         public string userid { get; set; }
+        
+        public string timeStamp { get; set; }
 
         public string message { get; set; }
     }

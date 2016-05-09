@@ -30,18 +30,18 @@
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
-        android:layout_height="350.0dp"
+        android:layout_height="420.0dp"
         android:id="@+id/messagesListView" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="87.5dp"
         android:id="@+id/linearLayout1">
         <MultiAutoCompleteTextView
             android:id="@+id/messageEntryText"
             android:layout_width="297.0dp"
             android:gravity="bottom"
-            android:layout_height="132.0dp" />
+            android:layout_height="82.5dp" />
         <Button
             android:text="Send"
             android:textSize="12.0sp"

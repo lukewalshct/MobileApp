@@ -9,17 +9,22 @@ using System.Web.Http.Description;
 using LWalshFinalAzure.DataObjects;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Linq;
+using Microsoft.Azure.Mobile.Server;
+using LWalshFinalAzure.Models;
 
 namespace LWalshFinalAzure.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = false)]
     public class MessageController : MessageBaseController
     {
+        MobileServiceContext context = new MobileServiceContext();
+        public MobileAppSettingsDictionary ConfigSettings => Configuration.GetMobileAppSettingsProvider().GetMobileAppSettings();
 
         /// <summary>
         /// Gets all of the people in the collection
         /// </summary>
         /// <returns>ArrayList.</returns>
+        [Authorize]
         public ArrayList Get()
         {
             ArrayList heterogeneousMessageList = new ArrayList();
@@ -45,6 +50,7 @@ namespace LWalshFinalAzure.Controllers
         /// <param name="id">The identifier.</param>
         /// <returns>System.Object.</returns>
         /// <exception cref="System.Web.Http.HttpResponseException"></exception>
+        [Authorize]
         public object Get(string id)
         {
             // Workaround Note as of May 2015: FirstOrDefault is not directly supported by the LINQ to DocumentDB provider so we have to use AsEnumerable().FirstOrDefault()
@@ -80,14 +86,34 @@ namespace LWalshFinalAzure.Controllers
         /// <returns>Task&lt;IHttpActionResult&gt;.</returns>
         /// <exception cref="HttpResponseException"></exception>
         [ResponseType(typeof(Message))]
+        [Authorize]
         public async Task<IHttpActionResult> Post([FromBody]Message message)
         {
             Document result = null;
-
+                        
             try
             {
-                // Let DocumentDB assign the Id, this is RESTfull because we are using POST
-                result = await DocumentClientInstance.CreateDocumentAsync(DocumentCollectionInstance.SelfLink, message);
+                IDPTransaction idpTransaction = new IDPTransaction(this.Request, this.ConfigSettings, this.Configuration);
+                ExtendedUserInfo userInfo = await idpTransaction.GetIDPInfo();
+
+                LWalshFinalAzure.DataObjects.User user = null;
+
+                if (userInfo != null)
+                {
+                    user = this.context.Users.Where(x => x.IDPUserID == (userInfo.providerType + ":" + userInfo.IDPUserId)).SingleOrDefault();
+                }
+                if (message != null && user != null)
+                {
+                    Message newMessage = new Message();
+                    newMessage.hhid = message.hhid;
+                    newMessage.memberName = user.firstName;
+                    newMessage.message = message.message;
+                    newMessage.userid = message.userid;
+                    newMessage.timeStamp = message.timeStamp;
+
+                    // Let DocumentDB assign the Id, this is RESTfull because we are using POST
+                    result = await DocumentClientInstance.CreateDocumentAsync(DocumentCollectionInstance.SelfLink, newMessage);
+                }
             }
             catch (Exception ex)
             {
@@ -107,6 +133,7 @@ namespace LWalshFinalAzure.Controllers
         /// <param name="id"></param>
         /// <param name="person"></param>
         /// <returns></returns>
+        [Authorize]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> Put(string id, [FromBody]Message message)
         {

@@ -19,11 +19,11 @@
             android:layout_width="148.0dp"
             android:layout_height="match_parent"
             android:id="@+id/senderText"
-            android:layout_marginRight="87.0dp" />
+            android:layout_marginRight="77.0dp" />
         <TextView
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_width="130.5dp"
+            android:layout_width="154.5dp"
             android:layout_height="match_parent"
             android:id="@+id/timText" />
     </LinearLayout>
