@@ -153,9 +153,6 @@ namespace LWalshFinalClient
 			// aapt resource value: 0x7f05002b
 			public const int linearLayout1 = 2131034155;
 			
-			// aapt resource value: 0x7f05002a
-			public const int listView1 = 2131034154;
-			
 			// aapt resource value: 0x7f050027
 			public const int loginButton = 2131034151;
 			
@@ -185,6 +182,9 @@ namespace LWalshFinalClient
 			
 			// aapt resource value: 0x7f05003f
 			public const int messagesButtonVote = 2131034175;
+			
+			// aapt resource value: 0x7f05002a
+			public const int messagesListView = 2131034154;
 			
 			// aapt resource value: 0x7f050031
 			public const int proposalButton = 2131034161;

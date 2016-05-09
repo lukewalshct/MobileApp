@@ -12,6 +12,9 @@ using Android.Widget;
 using Microsoft.WindowsAzure.MobileServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using LWalshFinalClient.Data_Models;
+using LWalshFinalClient.Resources;
 
 namespace LWalshFinalClient
 {
@@ -23,7 +26,9 @@ namespace LWalshFinalClient
         Button votesButton;
         Button householdInfoButton;
         Button sendButton;
+        ListView messagesListView;
         MultiAutoCompleteTextView messageEditText;
+        List<LWalshFinalClient.Data_Models.Message> messages;
         public string currentUserID { get; set; }
         public string currentHHID { get; set; }
 
@@ -44,6 +49,7 @@ namespace LWalshFinalClient
             this.householdInfoButton = FindViewById<Button>(Resource.Id.HHInfoButton);
             this.sendButton = FindViewById<Button>(Resource.Id.sendButton);
             this.messageEditText = FindViewById<MultiAutoCompleteTextView>(Resource.Id.messageEntryText);
+            this.messagesListView = FindViewById<ListView>(Resource.Id.messagesListView);
 
             this.homeButton.Click += navigationClick;
             this.votesButton.Click += navigationClick;
@@ -130,38 +136,68 @@ namespace LWalshFinalClient
         }
         private async Task<bool> getHouseholdMessages()
         {
+            string errorMessage = "";
+            try
+            {
+                JToken result = await this.client.InvokeApiAsync("message?id=" + this.currentHHID, HttpMethod.Get, null);
 
+                if (result.HasValues)
+                {
+                    //parse the household info and list of members
+                    this.messages = new List<LWalshFinalClient.Data_Models.Message>();
+
+                    //parse votes
+                    JArray messagesJArray = (JArray)result;
+                    foreach (var m in messagesJArray)
+                    {
+                        LWalshFinalClient.Data_Models.Message newMessage = new LWalshFinalClient.Data_Models.Message();
+
+                        newMessage.message = (string)m["message"];
+                        newMessage.memberName = (string)m["memberName"];
+                        newMessage.timeStamp = (string)m["timeStamp"];
+
+                        this.messages.Add(newMessage);
+                    }
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            if (errorMessage != "")
+            {
+                builder.SetMessage(errorMessage);
+                builder.Create().Show();
+            }
             return false;
         }
 
         private void displayMessages()        
         {
-            //if (this.householdVotes != null && this.householdVotes.Count > 0)
-            //{
-            //    try
-            //    {
-            //        List<VoteListItem> voteListItems = this.householdVotes.Select(x =>
-            //            new VoteListItem
-            //            {
-            //                membersVotedIDs = x.membersVotedIDs,
-            //                voteID = x.Id,
-            //                targetMember = x.targetMemberName,
-            //                voteType = x.voteType.ToString(),
-            //                balanceChange = x.balanceChange,
-            //                description = x.description,
-            //                voteStatus = x.voteStatus,
-            //                statusText = x.votesFor + " votes for, " + x.votesAgainst + " against (" + x.votesNeeded + " needed)"
-            //            }).ToList();
-            //        VoteScrollAdapter votesAdapter = new VoteScrollAdapter(this, voteListItems);
-            //        this.voteListView.Adapter = votesAdapter;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            //        builder.SetMessage(ex.Message);
-            //        builder.Create().Show();
-            //    }
-            //}
+            if (this.messages != null && this.messages.Count > 0)
+            {
+                try
+                {
+                    List<MessageListItem> messageListItems = this.messages.Select(x =>
+                        new MessageListItem
+                        {
+                            message = x.message,
+                            sender = x.memberName,
+                            timestamp = x.timeStamp
+                        }).ToList();
+
+                    MessageScrollAdapter messagesAdapter = new MessageScrollAdapter(this, messageListItems);
+                    this.messagesListView.Adapter = messagesAdapter;
+                }
+                catch (Exception ex)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.SetMessage(ex.Message);
+                    builder.Create().Show();
+                }
+            }
         }
         
         private void navigationClick(Object sender, EventArgs e)

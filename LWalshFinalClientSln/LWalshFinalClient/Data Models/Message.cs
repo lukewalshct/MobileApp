@@ -19,5 +19,9 @@ namespace LWalshFinalClient.Data_Models
         public string userid { get; set; }
 
         public string message { get; set; }
+
+        public string memberName { get; set; }
+
+        public string timeStamp { get; set; }
     }
 }

@@ -31,7 +31,7 @@
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="350.0dp"
-        android:id="@+id/listView1" />
+        android:id="@+id/messagesListView" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
