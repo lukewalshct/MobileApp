@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout2">
         <TextView
-            android:text="Filter/search by keyword:"
+            android:text="Filter/search messages by keyword:"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
