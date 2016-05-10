@@ -26,11 +26,45 @@
                 android:layout_width="128.5dp" />
         </TableRow>
     </TableLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout2">
+        <TextView
+            android:text="Filter/search by keyword:"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView1" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout3">
+            <EditText
+                android:layout_width="236.0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/searchEditText" />
+            <Button
+                android:text="Search"
+                android:textSize="12.0sp"
+                android:layout_width="wrap_content"
+                android:layout_height="40.0dp"
+                android:id="@+id/searchButton" />
+            <Button
+                android:text="Reset/All"
+                android:textSize="12.0sp"
+                android:layout_width="wrap_content"
+                android:layout_height="40.0dp"
+                android:id="@+id/resetButton" />
+        </LinearLayout>
+    </LinearLayout>
     <ListView
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
-        android:layout_height="420.0dp"
+        android:layout_height="364.0dp"
         android:id="@+id/messagesListView" />
     <LinearLayout
         android:orientation="horizontal"

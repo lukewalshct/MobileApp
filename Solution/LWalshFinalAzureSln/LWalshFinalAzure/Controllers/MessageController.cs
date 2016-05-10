@@ -109,7 +109,7 @@ namespace LWalshFinalAzure.Controllers
                     newMessage.memberName = user.firstName;
                     newMessage.message = message.message;
                     newMessage.userid = message.userid;
-                    newMessage.timeStamp = message.timeStamp;
+                    newMessage.timeStamp = message.timeStamp;                    
 
                     // Let DocumentDB assign the Id, this is RESTfull because we are using POST
                     result = await DocumentClientInstance.CreateDocumentAsync(DocumentCollectionInstance.SelfLink, newMessage);
@@ -124,7 +124,6 @@ namespace LWalshFinalAzure.Controllers
 
             return CreatedAtRoute("DefaultApi", new { id = result.Id }, result);
         }
-
 
         // PUT api/values/5
         /// <summary>
@@ -141,7 +140,7 @@ namespace LWalshFinalAzure.Controllers
 
             return StatusCode(HttpStatusCode.NoContent);
         }
-
+        
 
         /// <summary>
         /// Deletes the specified person.

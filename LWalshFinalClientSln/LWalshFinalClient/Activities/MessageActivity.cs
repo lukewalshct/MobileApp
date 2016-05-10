@@ -15,6 +15,9 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using LWalshFinalClient.Data_Models;
 using LWalshFinalClient.Resources;
+using Microsoft.Azure.Search;
+using System.Collections.ObjectModel;
+using Microsoft.Azure.Search.Models;
 
 namespace LWalshFinalClient
 {
@@ -26,18 +29,34 @@ namespace LWalshFinalClient
         Button votesButton;
         Button householdInfoButton;
         Button sendButton;
+        Button searchButton;
+        Button resetButton;
+        EditText searchEditText;
         ListView messagesListView;
         MultiAutoCompleteTextView messageEditText;
-        List<LWalshFinalClient.Data_Models.Message> messages;
+        List<LWalshFinalClient.Data_Models.Message> messages;        
         public string currentUserID { get; set; }
         public string currentHHID { get; set; }
+        //search
+        private const string SearchServiceName = "lwalshfinalsearch";
+        private const string SearchIndexName = "messageindex";
+        private const string SearchServiceQueryAPIKey = "2FC1A592EC69B5FD0AFF52B1B2FAF9E2";
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        private SearchServiceClient searchServiceClient;
+        private SearchIndexClient searchIndexClient;
+
+        private ObservableCollection<LWalshFinalClient.Data_Models.Message> searchResultsCollection = 
+            new ObservableCollection<LWalshFinalClient.Data_Models.Message>();
+
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             this.client = new MobileServiceClient("https://lwalshfinal.azurewebsites.net/", new HttpAutoProxyHandler());
-            //this.client = new MobileServiceClient("http://localhost:50103/");
+            
+            this.searchServiceClient = new SearchServiceClient(SearchServiceName, new SearchCredentials(SearchServiceQueryAPIKey));
+
+            this.searchIndexClient = this.searchServiceClient.Indexes.GetClient(SearchIndexName);
 
             // Set our view from the "household" layout resource
             SetContentView(Resource.Layout.Message);
@@ -50,14 +69,19 @@ namespace LWalshFinalClient
             this.sendButton = FindViewById<Button>(Resource.Id.sendButton);
             this.messageEditText = FindViewById<MultiAutoCompleteTextView>(Resource.Id.messageEntryText);
             this.messagesListView = FindViewById<ListView>(Resource.Id.messagesListView);
+            this.searchButton = FindViewById<Button>(Resource.Id.searchButton);
+            this.resetButton = FindViewById<Button>(Resource.Id.resetButton);
+            this.searchEditText = FindViewById<EditText>(Resource.Id.searchEditText);
 
             this.homeButton.Click += navigationClick;
             this.votesButton.Click += navigationClick;
             this.householdInfoButton.Click += navigationClick;
             this.sendButton.Click += sendClick;
+            this.searchButton.Click += searchClick;
+            this.resetButton.Click += searchClick;
 
             getIntentParameters();
-            updateDisplay();
+            updateDisplay(false);            
         }
 
         private void getIntentParameters()
@@ -73,19 +97,36 @@ namespace LWalshFinalClient
             }
         }
 
-        private async void updateDisplay()
+        private async void updateDisplay(bool isSearch)
         {
-            await getHouseholdMessages();
+            if (!isSearch)
+            {
+                await getHouseholdMessages();
+            }
             displayMessages();
             this.messageEditText.Text = "";
+        }
+
+        private async void searchClick(Object sender, EventArgs e)
+        {
+            if (sender == this.searchButton)
+            {
+                await SearchDocuments();
+            }
+            else
+            {
+                this.searchEditText.Text = "";
+                updateDisplay(false);
+            }
         }
 
         private async void sendClick(Object sender, EventArgs e)
         {
             bool submitSuccess = await submitMessage();
             if (submitSuccess)
-            {                
-                updateDisplay();
+            {
+                this.searchEditText.Text = "";     
+                updateDisplay(false);
             }
         }
 
@@ -199,6 +240,10 @@ namespace LWalshFinalClient
                     builder.Create().Show();
                 }
             }
+            else
+            {
+                this.messagesListView.Adapter = null;
+            }
         }
         
         private void navigationClick(Object sender, EventArgs e)
@@ -232,6 +277,41 @@ namespace LWalshFinalClient
 
             //newActivity.PutExtra("MyData", "Data from Activity1");
             StartActivity(newActivity);
+        }
+
+        private async Task SearchDocuments()
+        {
+            this.messages = null;
+            this.messages = new List<LWalshFinalClient.Data_Models.Message>();
+            string searchText = this.searchEditText.Text;
+
+            if (searchText != "")
+            {
+                try
+                {
+                    // Search the azure index
+                    DocumentSearchResult<LWalshFinalClient.Data_Models.Message> response =
+                        await this.searchIndexClient.Documents.SearchAsync<LWalshFinalClient.Data_Models.Message>(searchText);
+
+                    // Update results
+                    foreach (SearchResult<LWalshFinalClient.Data_Models.Message> result in response.Results)
+                    {
+                        if (result.Document.hhid == this.currentHHID)
+                        {
+                            this.messages.Add(result.Document);
+                        }
+                    }
+                    updateDisplay(true);
+                }
+                catch
+                {
+                    updateDisplay(false);
+                }
+            }
+            else
+            {
+                updateDisplay(false);
+            }
         }
     }
 }
