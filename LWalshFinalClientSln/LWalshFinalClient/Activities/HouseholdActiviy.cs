@@ -22,6 +22,13 @@ using Newtonsoft.Json;
 
 namespace LWalshFinalClient
 {
+    /// <summary>
+    /// This class represents the landing screen for a household which contains basic info about
+    /// the household such as its name, description, currency, landlord, and a list of members.
+    /// The landlord can edit this info. To users that are members of the household, there are
+    /// buttons that take the user to the Voting and Messaging screens, and for users that are
+    /// not members there's a button that allows the user to request to join the household.
+    /// </summary>
     [Activity(Label = "Household", MainLauncher = false, Icon = "@drawable/icon")]
     class HouseholdActiviy : Activity
     {
@@ -53,14 +60,13 @@ namespace LWalshFinalClient
         {
             base.OnCreate(bundle);
 
+            //declare the client
             this.client = new MobileServiceClient("https://lwalshfinal.azurewebsites.net/", new HttpAutoProxyHandler());
-            //this.client = new MobileServiceClient("http://localhost:50103/");
-
+                        
             // Set our view from the "household" layout resource
             SetContentView(Resource.Layout.Household);
 
-            // Get our button from the layout resource,
-            // and attach an event to it
+            // Assign buttons, views, etc
             this.homeButton = FindViewById<Button>(Resource.Id.homeButton);
             this.votesButton = FindViewById<Button>(Resource.Id.votesButton);
             this.messagesButton = FindViewById<Button>(Resource.Id.messagesButton);
@@ -75,6 +81,7 @@ namespace LWalshFinalClient
             this.userTitleLayout = FindViewById<LinearLayout>(Resource.Id.userTitleLayout);
             this.joinButton = FindViewById<Button>(Resource.Id.joinButton);
 
+            //Assign click event handlers
             this.homeButton.Click += navigationClick;
             this.votesButton.Click += navigationClick;
             this.messagesButton.Click += navigationClick;
@@ -83,18 +90,28 @@ namespace LWalshFinalClient
             this.joinButton.Click += joinClick;
             this.isMember = false;
             this.isEditInfo = false;
-            //if the activity was instantiated by an intent with parameters, get the parameters
-            //and initialize the appropriate class variables
-            getIntentParameters();            
+            //get the intent parameters and initialize the appropriate class variables
+            //this is done so that when the user navigates to this screen from one of the
+            //other screens, the user's authentication data is preserved so the screen can show
+            //the relevant data
+            getIntentParameters();
+            //update display            
             updateDisplay();
         }
 
+        /// <summary>
+        /// Updates the display
+        /// </summary>
         private async void updateDisplay()
-        {
+        {            
             this.joinButton.Visibility = ViewStates.Gone;
+            //get the household info
             await getHousehold();
+            //get info about the user
             await getUser();
+            //the user is a member, get info about the current member
             this.isMember = await getCurrentMember();
+            //display the basic household info
             if (this.currentHousehold != null)
             {
                 this.hhNameEditText.Text = this.currentHousehold.name;
@@ -109,9 +126,12 @@ namespace LWalshFinalClient
                 this.hhLandlordTextView.Text = "";
                 this.hhCurrencyEditText.Text = "";
             }
+            //display a list of members in the household
             displayMembers();
+            //enable/disable buttons based on whether the user is a member
             if (this.isMember)
             {
+                //if member, allow navigation to message and voting screens
                 this.votesButton.Clickable = true;
                 this.messagesButton.Clickable = true;
                 this.votesButton.Enabled = true;
@@ -119,6 +139,8 @@ namespace LWalshFinalClient
             }
             else
             {
+                //if not member, do not allow navigation to the message and voting screens
+                //show the "Request to Join" button and alert the user they are not a member
                 this.votesButton.Clickable = false;
                 this.messagesButton.Clickable = false;
                 this.votesButton.Enabled = false;
@@ -129,8 +151,11 @@ namespace LWalshFinalClient
                 builder.SetMessage(message);
                 builder.Create().Show();
             }
+            //enable/disable buttons based on the user's landlord status
             if (this.isMember && this.currentMember != null && this.currentMember.isLandlord)
             {
+                //if the member is the landlord, display buttons that allow the user to edit 
+                //the household info
                 this.landlordTitleLayout.Visibility = ViewStates.Visible;
                 this.userTitleLayout.Visibility = ViewStates.Gone;
                 this.saveEditButton.Clickable = true;
@@ -138,17 +163,21 @@ namespace LWalshFinalClient
             }
             else
             {
+                //if user is not landlord, do not allow household info to be edited
                 this.landlordTitleLayout.Visibility = ViewStates.Gone;
                 this.userTitleLayout.Visibility = ViewStates.Visible;
                 this.saveEditButton.Clickable = false;
                 this.cancelEditButton.Clickable = false;
             }
+            //if the household info is currently being edited, allow the fields
+            //to be clicked and edited
             if (this.isEditInfo)
             {
                 this.hhNameEditText.Enabled = true;
                 this.hhCurrencyEditText.Enabled = true;
                 this.hhDescriptionEditText.Enabled = true;
             }
+            //else the text fields are not editable/clickable
             else
             {
                 this.hhNameEditText.Enabled = false;                
@@ -158,22 +187,38 @@ namespace LWalshFinalClient
                 this.hhCurrencyEditText.SetTextColor(Color.White);
                 this.hhDescriptionEditText.SetTextColor(Color.White);
             }
+            //display cancel and save buttons if the info is being edited; else hide
             this.cancelEditButton.Visibility = this.isEditInfo ? ViewStates.Visible : ViewStates.Invisible;
             this.saveEditButton.Text = this.isEditInfo ? "Save" : "Edit Info";
             this.joinButton.Visibility = this.isMember ? ViewStates.Gone : ViewStates.Visible;
         }
 
+        /// <summary>
+        /// Event handler triggered when the "Request to Join" button is clicked. This calls
+        /// the sendJoinRequest method.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">The event args</param>
         private async void joinClick(Object sender, EventArgs e)
         {
             await sendJoinRequest();            
         }
 
+        /// <summary>
+        /// Makes a POST request to the Household resource in Azure, adding a NewMember
+        /// vote to the household's list of votes with the user as the target member.
+        /// The result is that a proposal to allow the user to join the household appears
+        /// in the household members' voting screen, and if it's passed the user will
+        /// become a member of the household.
+        /// </summary>
+        /// <returns></returns>
         private async Task<bool> sendJoinRequest()
         {
             string message = "";
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             try
             {
+                //create a new vote that represents a NewMember vote/proposal
                 Vote vote = new Vote();
 
                 vote.targetMemberID = this.currentUserID;
@@ -190,13 +235,13 @@ namespace LWalshFinalClient
                 JToken payload = JObject.FromObject(vote);
                 JToken result = await this.client.InvokeApiAsync("vote/newvote", payload);
 
+                //if successful, display message to the user
                 if (result.HasValues)
                 {
                     message = "Successfully submitted request to join the household! The request will now appear in the household's" +
                         "vote list to all household members. All current household members must approve your request in order to join.";
                     builder.SetMessage(message);
-                    builder.Create().Show();
-                    //reset fields for next vote
+                    builder.Create().Show();                    
                     return true;
                 }
             }
@@ -223,6 +268,12 @@ namespace LWalshFinalClient
             return false;
         }
 
+        /// <summary>
+        /// Helper method that returns the message content from a MobileServiceInvalidOperationException. Useful
+        /// because the message returned from the Azure APIs need to be parsed from JSON.
+        /// </summary>
+        /// <param name="ex">The MobileServiceInvalidOperationException</param>
+        /// <returns>String representation of the error message</returns>
         private async Task<string> getMobileServiceExceptionMessage(MobileServiceInvalidOperationException ex)
         {
             string message = "";
@@ -236,29 +287,49 @@ namespace LWalshFinalClient
             return message;
         }
 
+        /// <summary>
+        /// Event handler when the save/edit button are clicked. This button appears only for 
+        /// the landlord and when clicked allows the landlord to edit the household info. When
+        /// clicked ("Save") while editing, a POST call is then made to the Household resource 
+        /// to update the household info in the Azure SQL database.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">The event args</param>
         private async void saveEditClick(Object sender, EventArgs e)
         {
+            //if the button is clicked while the info is being edited (displaying "Save"),
+            //make a call to the Household resource to update the Azure SQL database
             if (this.isEditInfo)
             {
                 bool successfulUpdate = await updateHouseholdInfo();
+                //if the update is successful set the state of the screen to "not editing"
                 if (successfulUpdate)
                 {
                     this.isEditInfo = false;
                 }
             }
+            //if the household info wasn't already being edited, set the screen state to "editing"
             else
             {
                 this.isEditInfo = true;
             }
+            //update the display
             updateDisplay();
         }
 
+        /// <summary>
+        /// Method called when the saveEditButton click event is triggered; makes a call to the 
+        /// Household resource to update the household info in the Azure SQL database.
+        /// </summary>
+        /// <returns></returns>
         private async Task<bool> updateHouseholdInfo()
         {
             string message = "";
             AlertDialog.Builder builder = new AlertDialog.Builder(this);            
             try
             {
+                //create a new household based on the current household but using
+                //the new name, description, and currency entered by the landlord
                 Household hh = new Household();
                 hh.id = this.currentHHID;
                 hh.landlordIDP = this.currentUserID;
@@ -266,9 +337,11 @@ namespace LWalshFinalClient
                 hh.description = this.hhDescriptionEditText.Text;
                 hh.currencyName = this.hhCurrencyEditText.Text;
 
+                //make call to the household resource
                 JToken payload = JObject.FromObject(hh);
                 JToken result = await this.client.InvokeApiAsync("household/editinfo", payload);
 
+                //if successful, display success message
                 if (result.HasValues)
                 {
                     message = "Successfully updated household info.";
@@ -299,19 +372,35 @@ namespace LWalshFinalClient
             return false;
 
         }
+
+        /// <summary>
+        /// Event handler triggered when the cancel button is clicked. The cancel button
+        /// is only displayed when the info is being edited and this method essentially
+        /// cancels all changes and returns the screen to a "not editing" state
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">The event args</param>
         private void cancelEditClick(Object sender, EventArgs e)
         {
             this.isEditInfo = false;
             updateDisplay();
         }
 
+        /// <summary>
+        /// Method that makes a call to the Household resource and retrieves information about 
+        /// the household to display to the user. This is called when then screen is first created 
+        /// or if any updates are made.
+        /// </summary>
+        /// <returns></returns>
         private async Task<bool> getHousehold()
         {
             string errorMessage = "";
             try
             {
+                //make call to the household resource
                 JToken result = await this.client.InvokeApiAsync("household/byid/" + this.currentHHID, HttpMethod.Get, null);
 
+                //if successful call, update the household data
                 if (result.HasValues)
                 {
                     //parse the household info and list of members
@@ -363,16 +452,22 @@ namespace LWalshFinalClient
             return false;
         }
 
+        /// <summary>
+        /// Makes a call to the User resource to get the current user.
+        /// </summary>
+        /// <returns>Bool indicating success or failure</returns>
         private async Task<bool> getUser()
         {
             string errorMessage = "";
             try
             {
+                //make call to the User resource
                 JToken result = await this.client.InvokeApiAsync("user/byauth", HttpMethod.Get, null);
 
+                //if successful request, update the current user
                 if (result.HasValues)
                 {
-                    //parse the user info and list of members
+                    //parse the user info
                     this.currentUser = new User();
 
                     this.currentUser.firstName = (string)((JObject)result)["firstName"];
@@ -399,15 +494,23 @@ namespace LWalshFinalClient
             return false;
         }
 
+        /// <summary>
+        /// Makes a call to the Household resource to try and get the current member.
+        /// This is different from the User since sometimes the user may not be a 
+        /// member of the household.
+        /// </summary>
+        /// <returns>Bool indicating success or failure</returns>
         private async Task<bool> getCurrentMember()
         {
             string errorMessage = "";
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             try
             {
+                //make request to the household resource using the household and user ids
                 JToken m = await this.client.InvokeApiAsync("household/byid/" + this.currentHHID +
                     "/getmember/" + this.currentUserID.Substring(9), HttpMethod.Get, null);
 
+                //if successful request, parse the result and update the current household member
                 if (m.HasValues)
                 {
                     this.currentMember = new HouseholdMember();
@@ -441,25 +544,30 @@ namespace LWalshFinalClient
             return false;
         }
 
+        /// <summary>
+        /// A method that retrieves the parameters from the intent that created
+        /// the activity. This ensures that the user authentication data is preserved.
+        /// If these parameters exist, the MobileServicesClient is overwritten
+        /// by a new client that uses the user's authentication data.
+        /// </summary>
         private void getIntentParameters()
         {
             if (this.Intent.Extras != null)
             {
                 this.currentUserID = this.Intent.Extras.GetString("currentUserID");
                 this.currentHHID = this.Intent.Extras.GetString("currentHHID");
-                //recreate the authenticated user and add it to the client
+                //recreate the client using the user's authenticatino and overwrite current client
                 string clientUserID = this.Intent.Extras.GetString("clientUserID");
                 this.client.CurrentUser = new MobileServiceUser(clientUserID);                
                 this.client.CurrentUser.MobileServiceAuthenticationToken = this.Intent.Extras.GetString("clientAuthToken");
-                //var clientJson = this.Intent.Extras.GetString("client");
-                //if (clientJson != null)
-                //{
-                //    MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
-                //    this.client = client;
-                //}
             }
         }
 
+        /// <summary>
+        /// Displays the list of household members to the user as a scrollable list. This is accomplished by using
+        /// an adapter (MemberScrollAdapter) which binds the data to the listview (membersListView).
+        /// </summary>
+        /// </summary>
         private void displayMembers()
         {
             if (this.members != null && this.members.Count > 0)
@@ -471,8 +579,17 @@ namespace LWalshFinalClient
                 this.membersListView.Adapter = membersAdapter;
             }
         }
+
+        /// <summary>
+        /// Event handler triggered by a user clicking on one of the navigation buttons on 
+        /// the bottom of the screen. The user is then brought to the appropriate screen.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">The event args</param>
         private void navigationClick(Object sender, EventArgs e)
         {
+            //the activityType represents the activity or "screen" the user 
+            //will switch to
             Type activityType = null;
 
             if (sender == this.homeButton)
@@ -487,20 +604,23 @@ namespace LWalshFinalClient
             {
                 activityType = typeof(MessageActivity);
             }
-            
+
+            //prepare for the new Activity (screen) to be launched
+            //we want to preserve the data about the user and login status (user should be logged in)
+            //when the new screen is created
+            //create a new intent
             Intent newActivity = new Intent(this, activityType);
+            //put the relevant data fields into the bundle as strings. These will be retrieved
+            //by the new screen
             var bundle = new Bundle();            
             bundle.PutString("isLoggedIn", "true");
             bundle.PutString("currentUserID", this.currentUserID);
             bundle.PutString("currentHHID", this.currentHHID);
-            //serialize the mobilserivce client so user data stays intact
-            //var clientJson = new JavaScriptSerializer().Serialize(this.client);
-            //bundle.PutString("client", clientJson);
             bundle.PutString("clientUserID", this.client.CurrentUser.UserId);
             bundle.PutString("clientAuthToken", this.client.CurrentUser.MobileServiceAuthenticationToken);
             newActivity.PutExtras(bundle);            
 
-            //newActivity.PutExtra("MyData", "Data from Activity1");
+            //launch the new activity/screen
             StartActivity(newActivity);
         }
     
