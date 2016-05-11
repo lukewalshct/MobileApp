@@ -11,6 +11,10 @@ using Microsoft.Azure.Documents.Linq;
 
 namespace LWalshFinalAzure.Controllers
 {
+    /// <summary>
+    /// Base class for the Message controller, which interacts with Azure DocumentDB where messages
+    /// are stored and retrieved.
+    /// </summary>
     [ApiExplorerSettings(IgnoreApi = true)]
     public class MessageBaseController : ApiController
     {
@@ -31,7 +35,7 @@ namespace LWalshFinalAzure.Controllers
         protected DocumentCollection DocumentCollectionInstance;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PersonController"/> class.
+        /// Initializes a new instance of the <see cref="MessageController"/> class.
         /// </summary>
         public MessageBaseController()
         {
@@ -111,27 +115,7 @@ namespace LWalshFinalAzure.Controllers
         {
             System.Diagnostics.Trace.TraceInformation("Default: IndexingPolicy.IndexingMode: {0}", DocumentCollectionInstance.IndexingPolicy.IndexingMode);
             System.Diagnostics.Trace.TraceInformation("Default: IndexingPolicy.Automatic: {0}", DocumentCollectionInstance.IndexingPolicy.Automatic);
-
-            // DEMO
-            // Set the indexing mode to Lazy (indexing occurs asynchronously with respect to Create, Update, Delete
-            //DocumentCollectionInstance.IndexingPolicy.IndexingMode = IndexingMode.Lazy;
-
-            // DEMO
-            // Set the indexing policy to manual (indexing does not happen for documents added to the collection automatically)
-            //DocumentCollectionInstance.IndexingPolicy.Automatic = false;
-
-
-            // DEMO Excluding a path from indexing
-            //DocumentCollectionInstance.IndexingPolicy.ExcludedPaths.Add("/\"Metadata\"/*");
-
-            // DEMO Specifying a Rang index on the timestamp property
-            //DocumentCollectionInstance.IndexingPolicy.IncludedPaths.Add(new IndexingPath
-            //{
-            //    IndexType = IndexType.Range,
-            //    Path = @"/""MemberSinceTimeStamp""/?",
-            //    NumericPrecision = 7
-            //});
-
+                        
             System.Diagnostics.Trace.TraceInformation("Current: IndexingPolicy.IndexingMode: {0}", DocumentCollectionInstance.IndexingPolicy.IndexingMode);
             System.Diagnostics.Trace.TraceInformation("Current: IndexingPolicy.Automatic: {0}", DocumentCollectionInstance.IndexingPolicy.Automatic);
         }
