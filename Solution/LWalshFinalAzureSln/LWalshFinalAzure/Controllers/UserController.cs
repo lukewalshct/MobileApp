@@ -11,12 +11,16 @@ using System;
 
 namespace LWalshFinalAzure.Controllers
 {
-   
+    /// <summary>
+    /// The primary role of the user controller is to retrieve data about users.
+    /// </summary>
     public class UserController : TableController<User>
     {
+        //set context and config settings
         MobileServiceContext context = new MobileServiceContext();
         public MobileAppSettingsDictionary ConfigSettings => Configuration.GetMobileAppSettingsProvider().GetMobileAppSettings();
 
+        //initialize the controller
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
@@ -24,39 +28,26 @@ namespace LWalshFinalAzure.Controllers
             DomainManager = new EntityDomainManager<User>(context, Request);
         }
 
-        // GET tables/User
+        /// <summary>
+        /// GET method that returns all users.
+        /// </summary>
+        /// <returns>IQueryable of all users</returns>
         [HttpGet]
         [Route("user/all")]
         [ActionName("all")]
         public IQueryable<User> GetAllUser()
         {
-            //need to find the user first, get the id, then attach since if we use the actual user
-            //and try to add the user to the HH's list it will try to insert the user again
-            //which will cause an error
-
-            //try
-            //{
-            //    User newUser = new User() { Id = Query().First().Id };
-            //    context.Users.Attach(newUser);
-
-            //    Household testHH = new Household();
-            //    testHH.Id = Guid.NewGuid().ToString();
-            //    testHH.name = "Test Household";
-            //    testHH.users.Add(newUser);
-            //    context.Households.Add(testHH);
-            //    context.SaveChanges();
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             return Query();
         }
 
+        /// <summary>
+        /// GET method that returns a user by the id specified.
+        /// </summary>
+        /// <param name="id">The user id</param>
+        /// <returns>The user</returns>
         [HttpGet]
         [Route("user/byid/{id}")]
-        [ActionName("byid")]
-        // GET tables/User/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        [ActionName("byid")]        
         public SingleResult<User> GetUser(string id)
         {
             if (id != null && id.Length > 0)
@@ -69,16 +60,21 @@ namespace LWalshFinalAzure.Controllers
             }
         }
 
+        /// <summary>
+        /// GET method that returns the current, authorized user.
+        /// </summary>
+        /// <returns>The authorized user</returns>
         [HttpGet]
         [Route("user/byauth")]
         [ActionName("byauth")]
-        [Authorize]
-        // GET tables/User/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        [Authorize]        
         public async Task<User> GetUserByAuth()
         {
+            //get user info from the Facebook graph
             IDPTransaction idpTransaction = new IDPTransaction(this.Request, this.ConfigSettings, this.Configuration);
             ExtendedUserInfo userInfo = await idpTransaction.GetIDPInfo();
 
+            //return user in the Azure SQL database that matches the Facebook user info
             if (userInfo != null)
             {
                 return this.context.Users.Where(x => x.IDPUserID == 
@@ -88,24 +84,6 @@ namespace LWalshFinalAzure.Controllers
             {
                 return null;
             }
-        }
-        //// PATCH tables/User/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        //public Task<User> PatchUser(string id, Delta<User> patch)
-        //{
-        //     return UpdateAsync(id, patch);
-        //}
-
-        //// POST tables/User
-        //public async Task<IHttpActionResult> PostUser(User item)
-        //{
-        //    User current = await InsertAsync(item);
-        //    return CreatedAtRoute("Tables", new { id = current.Id }, current);
-        //}
-
-        //// DELETE tables/User/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        //public Task DeleteUser(string id)
-        //{
-        //     return DeleteAsync(id);
-        //}
+        }        
     }
 }
