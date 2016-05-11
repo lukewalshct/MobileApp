@@ -16,6 +16,12 @@ using System.Web.Script.Serialization;
 
 namespace LWalshFinalClient
 {
+    /// <summary>
+    /// This class represents the main and first screen any user sees when the app is launched.
+    /// It's a landing page where the user can login, quit the app, create a household, view 
+    /// their household, and households their friends belongs to. Clicking on one of these households
+    /// brings the user to that household's screen.
+    /// </summary>
     [Activity(Label = "Home", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
@@ -39,14 +45,13 @@ namespace LWalshFinalClient
         {
             base.OnCreate(bundle);
 
+            //initialize mobile service client
             this.client = new MobileServiceClient("https://lwalshfinal.azurewebsites.net/", new HttpAutoProxyHandler());
-            //this.client = new MobileServiceClient("http://localhost:50103/");
-
+           
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
-            // Get our button from the layout resource,
-            // and attach an event to it
+            // Assign buttons, views, etc
             this.loginButton = FindViewById<Button>(Resource.Id.loginButton);
             this.quitButton = FindViewById<Button>(Resource.Id.quitButton);
             this.createHHButton = FindViewById<Button>(Resource.Id.createHHButton);            
@@ -56,23 +61,33 @@ namespace LWalshFinalClient
             this.friendsHHSwitch = FindViewById<Switch>(Resource.Id.whichHHSwitch);
             this.hhSwitchLayout = FindViewById<LinearLayout>(Resource.Id.hhSwitchLayout);
 
+            //add event handling
             this.loginButton.Click += loginClick;
             this.createHHButton.Click += createHHClick;
             this.quitButton.Click += quitClick;
             this.householdsListView.ItemClick += householdsListViewItemClick;
             this.friendsHHSwitch.CheckedChange += friendsHHSwitchChange;            
 
+            //set default booleans
             this.isLoggedIn = false;
-            this.isRegistered = false;            
-            this.isHomeScreen = true;
-
-            //string text = this.Intent.GetStringExtra("MyData") ?? "Data not available";
+            this.isRegistered = false;                        
+                        
             //if the activity was instantiated by an intent with parameters, get the parameters
             //and initialize the appropriate class variables
+            //this is done so that if the user navigates back to the home screen from one of the
+            //other screens, the user's authentication data is preserved so the screen can show
+            //the relevant data
             getIntentParameters();
+            //update the display
             updateDisplay();
         }
 
+        /// <summary>
+        /// A method that retrieves the parameters from the intent that created
+        /// the activity. This ensures that the user authentication data is preserved.
+        /// If these parameters exist, the MobileServicesClient is overwritten
+        /// by a new client that uses the user's authentication data.
+        /// </summary>
         private void getIntentParameters()
         {
             if (this.Intent.Extras != null)
@@ -87,27 +102,34 @@ namespace LWalshFinalClient
                 string clientUserID = this.Intent.Extras.GetString("clientUserID");
                 this.client.CurrentUser = new MobileServiceUser(clientUserID);
                 this.client.CurrentUser.MobileServiceAuthenticationToken = this.Intent.Extras.GetString("clientAuthToken");
-                //var clientJson = this.Intent.Extras.GetString("client");                
-                //if (clientJson != null)
-                //{
-                //    MobileServiceClient client = new JavaScriptSerializer().Deserialize<MobileServiceClient>(clientJson);
-                //    this.client = client;
-                //}
             }
         }
+
+        /// <summary>
+        /// Updates the display.
+        /// </summary>
         private async void updateDisplay()
         {
             this.loginButton.Text = this.isLoggedIn ? "Logout" : "Login";
+            //only display households if the user is logged in and registered
             this.householdsListView.Visibility = (this.isLoggedIn && this.isRegistered) ? ViewStates.Visible : ViewStates.Invisible;
             this.hhSwitchLayout.Visibility = (this.isLoggedIn && this.isRegistered) ? ViewStates.Visible : ViewStates.Invisible;
             this.HHNameTextView.Visibility = ViewStates.Gone;
             this.HHLandlordTextView.Visibility = ViewStates.Gone;
             this.householdsListView.Enabled = true;
+            //retrieve the households
             await updateHouseholdList();
+            //display the households
             displayHouseholds();
         }
 
-
+        /// <summary>
+        /// Makes a call to the Azure API to get the list of households. If the toggle switch
+        /// is for the user's household, it gets the user's households and assigns them to the class
+        /// scope households list; else if the toggle switch is for the user's friends it will retrieve
+        /// the user's friends' households.
+        /// </summary>
+        /// <returns>Bool indicating success</returns>
         private async Task<bool> updateHouseholdList()
         {
             this.HHListItems = null;
@@ -116,9 +138,11 @@ namespace LWalshFinalClient
             {
                 try
                 {
+                    //make a call to the househlds controller to get the user's households
                     string uri = "household/byuser/" + this.currentUserID.Substring(9);
                     JToken result = await this.client.InvokeApiAsync(uri, HttpMethod.Get, null);
 
+                    //if successful request, assign the user's households to the class scope households list
                     if(result != null && result.HasValues)
                     {
                         List<HHListItem> households = new List<HHListItem>();
@@ -147,9 +171,11 @@ namespace LWalshFinalClient
             {
                 try
                 {
+                    //make a call to the friend controller to get the user's friends' households
                     string uri = "user/byid/" + this.currentUserID.Substring(9) + "/friends";
                     JToken result = await this.client.InvokeApiAsync(uri, HttpMethod.Get, null);
 
+                    //if successful request, assign these households to the class scope households list
                     if (result != null && result.HasValues)
                     {
                         List<HHListItem> households = new List<HHListItem>();
@@ -176,29 +202,48 @@ namespace LWalshFinalClient
             return true;
         }
 
-        //if home screen, displays the households
+        /// <summary>
+        /// Displays the list of households to the user as a scrollable list. This is accomplished by using
+        /// an adapter (HHScrollAdapter) which binds the data to the listview (householdsListView).
+        /// </summary>
         private void displayHouseholds()
         {
+            //if there are households, display them
             if (this.HHListItems != null && this.HHListItems.Count > 0)
             {
                 HHScrollAdapter householdsAdapter = new HHScrollAdapter(this, this.HHListItems);
                 this.householdsListView.Adapter = householdsAdapter;
                 this.householdsListView.Visibility = ViewStates.Visible;
             }
+            //else hide the list view
             else
             {
                 this.householdsListView.Visibility = ViewStates.Gone;
             }
         }
 
+        /// <summary>
+        /// Event handler triggered when the switch between user and friend households is toggled.
+        /// The result is that the display is updated.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">The event args</param>
         private void friendsHHSwitchChange(Object sender, EventArgs e)
         {
             updateDisplay();
         }
 
+        /// <summary>
+        /// Event handler that triggers when the login button is clicked. If the user is not logged
+        /// in it will prompt Facebook's authentication screen. If the user is already logged in it 
+        /// will log the user out. 
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">The event args</param>
         private async void loginClick(Object sender, EventArgs e)
         {
             try {
+                //if user isn't logged in; log the user in
                 if (client.CurrentUser == null || client.CurrentUser.UserId == null)
                 {
                     this.loginButton.Enabled = false;
@@ -208,6 +253,7 @@ namespace LWalshFinalClient
                     this.isRegistered = await registerUser();
                     this.loginButton.Enabled = true;
                 }
+                //else logout
                 else
                 {
                     this.isLoggedIn = false;
@@ -224,6 +270,7 @@ namespace LWalshFinalClient
             {
 
             }
+            //update the display
             updateDisplay();
         }
 
@@ -261,21 +308,17 @@ namespace LWalshFinalClient
             }
         }
 
-        private async void getTest(Object sender, EventArgs e)
-        {
-            try
-            {
-                JToken result = await this.client.InvokeApiAsync("user", HttpMethod.Get, null);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
+        /// <summary>
+        /// Event handler triggered when a user clicks the "Create Household" button. This
+        /// method sends a request to Azure Household resource to create a new household. The
+        /// new household appears in the user's household list after the screen is updated.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">The event args</param>
         private async void createHHClick(Object sender, EventArgs e)
         {
             string message = "";
+            //check to make sure the user is logged in; else the request is denied
             if (!this.isLoggedIn || !this.isRegistered)
             {
                 message = "You must be logged in to create a new household.";
@@ -284,6 +327,7 @@ namespace LWalshFinalClient
             {
                 try
                 {
+                    //call the household resource to create a new household and display a success message
                     JToken result = await this.client.InvokeApiAsync("household/create", HttpMethod.Post, null);
 
                     if (result.HasValues)
@@ -306,6 +350,7 @@ namespace LWalshFinalClient
             builder.Create().Show();            
         }
         
+        /// <Summary>
         /// Quits the app.
         /// </summary>
         /// <param name="sender">The sender object.</param>
@@ -319,18 +364,20 @@ namespace LWalshFinalClient
         /// <summary>
         /// Registers the user with the Azure service if they are logged in.
         /// </summary>
+        /// <returns>Bool indicating success</returns>
         private async Task<bool> registerUser()
         {
             string message = "";
             if (!this.isLoggedIn)
             {
-                message = "Login failed, please try again.";
+                message = "Registration failed, please try again.";
                 return false;
             }
             else
             {
                 try
                 {
+                    //make a call to the registration resource
                     JToken result = await this.client.InvokeApiAsync("registration", null);
 
                     if (result.HasValues)
@@ -356,27 +403,40 @@ namespace LWalshFinalClient
             return false;     
         }
 
+        /// <summary>
+        /// Event handler triggered by a user clicking on one of the households in the list view.
+        /// The user is then brought to the Household screen for that household.
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">The event args</param>
         private void householdsListViewItemClick(Object sender, AdapterView.ItemClickEventArgs e)
         {
+            //check to make sure there are household items in the list
+            //the HHListItem object represents an item in the list view which is a simplified
+            //version of a household for display purposes
             if (this.HHListItems != null && this.HHListItems.Count > 0)
             {
+                //retrieve the household List Item the user clicked on
                 HHListItem item = this.HHListItems[e.Position];
 
+                //prepare a new Household Activity (screen) to be launched
+                //we want to preserve the data about the user and login status (user should be logged in)
+                //when the household screen is created
+                //create a new activity and intent
                 Type activityType = typeof(HouseholdActiviy);
                 Intent newActivity = new Intent(this, activityType);
                 var bundle = new Bundle();
+                //put the relevant data fields into the bundle as strings. These will be retrieved
+                //by the new household screen
                 bundle.PutString("MyData", "Data from Activity1");
                 bundle.PutString("isLoggedIn", "true");
                 bundle.PutString("currentUserID", this.currentUserID);
                 bundle.PutString("currentHHID", item.id);
-                //pass the authentication data
-                //string clientJson = new JavaScriptSerializer().Serialize(this.client);
-                //bundle.PutString("client", clientJson);
                 bundle.PutString("clientUserID", this.client.CurrentUser.UserId);
                 bundle.PutString("clientAuthToken", this.client.CurrentUser.MobileServiceAuthenticationToken);
                 newActivity.PutExtras(bundle);
-
-                //newActivity.PutExtra("MyData", "Data from Activity1");
+                
+                //launch the new activity/screen
                 StartActivity(newActivity);
             }
         }
