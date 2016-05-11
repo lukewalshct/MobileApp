@@ -6,6 +6,9 @@ using System.Web;
 
 namespace LWalshFinalAzure.DataObjects
 {
+    /// <summary>
+    /// A class that represents a household member
+    /// </summary>
     public class HouseholdMember : EntityData
     {
         public string firstName { get; set; }

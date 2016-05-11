@@ -5,6 +5,9 @@ using System.Web;
 
 namespace LWalshFinalAzure.DataObjects
 {
+    /// <summary>
+    /// A class that represents a message (will be populated from Azure Document DB)
+    /// </summary>
     public class Message
     {
         public string id { get; set; }

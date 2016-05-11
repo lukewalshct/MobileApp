@@ -2,6 +2,9 @@
 
 namespace LWalshFinalAzure
 {
+    /// <summary>
+    /// A class that sets up configuration for Azure Document DB
+    /// </summary>
     public static class ConfigUtils
     {
         /// <summary>

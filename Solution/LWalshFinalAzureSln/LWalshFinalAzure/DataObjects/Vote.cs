@@ -6,6 +6,9 @@ using System.Web;
 
 namespace LWalshFinalAzure.DataObjects
 {
+    /// <summary>
+    /// A class that represents a vote
+    /// </summary>
     public class Vote : EntityData    {
         
         public ICollection<HouseholdMember> membersVoted { get; set; }
