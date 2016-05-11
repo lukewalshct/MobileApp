@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LWalshFinalClient.HouseholdActiviy" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KAAAIAAgAWAAAgCYBQAQBEAAASKAIASIJAAgBhAQQAI=</HashCode>
+      <FileName>Activities\HouseholdActiviy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.MainActivity" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KAAgQAAQAQEABAAgQAgCAABAACAIAQAAIAAABJBBBgI=</HashCode>
+      <FileName>Activities\MainActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.MessageActivity" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KgAAICQQAQAAAAAAAAEBBFAAACAAgAQBJAwGBEAAAEE=</HashCode>
+      <FileName>Activities\MessageActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.VoteActivity" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KAgAICAwAcQQAAiSCCQQDACAACgIEAQALAAABhAQAgA=</HashCode>
+      <FileName>Activities\VoteActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.HHListItem" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAgAAgA=</HashCode>
+      <FileName>Data Models\HHListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Household" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAIAAAAAAAAAAEAAAAAAAAAAgAAgI=</HashCode>
+      <FileName>Data Models\Household.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.HouseholdMember" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCAAAAQABgAAAAKAAAEAAAAAAAAAAIAAEACAAAAAA=</HashCode>
+      <FileName>Data Models\HouseholdMember.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.MemberListItem" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data Models\MemberListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.HttpAutoProxyHandler" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HttpAutoProxyHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Resource" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Data_Models.Message" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAACAAAAAAAAAgAAAAAAAAAAAAAAAAAAAEACA=</HashCode>
+      <FileName>Data Models\Message.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Data_Models.MessageListItem" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Data Models\MessageListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Data_Models.User" Collapsed="true">
+    <Position X="7.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAEAACAAAAAA=</HashCode>
+      <FileName>Data Models\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Data_Models.Vote" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAABEAQAgAAIAIAQAAAACAAAAAARAAAAAACAgAAA=</HashCode>
+      <FileName>Data Models\Vote.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Data_Models.VoteCast" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Data Models\VoteCast.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Data_Models.VoteListItem" Collapsed="true">
+    <Position X="5.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAIAQAAgAAAAAAAABAJAAAAAAgAAA=</HashCode>
+      <FileName>Data Models\VoteListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Resources.HHScrollAdapter" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAAAAAAAAAgCAAAAAQAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Resources\HHScrollAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Resources.MemberScrollAdapter" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAAAAAAAAAACAAAAAQAAAAAAACAAAABAAAAAAA=</HashCode>
+      <FileName>Resources\MemberScrollAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Resources.MessageScrollAdapter" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAEAAAAAAAACAAAAAQAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Resources\MessageScrollAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalClient.Resources.VoteScrollAdapter" Collapsed="true">
+    <Position X="7.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAAAAAACAAACAAAAASAQAAAAAAAAAABAQAAAAA=</HashCode>
+      <FileName>Resources\VoteScrollAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="LWalshFinalClient.Data_Models.VoteType" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAQAAAACAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Data Models\Vote.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

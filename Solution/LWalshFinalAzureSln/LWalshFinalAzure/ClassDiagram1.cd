@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LWalshFinalAzure.Startup" Collapsed="true">
+    <Position X="8.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\Startup.MobileApp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.MobileServiceInitializer" Collapsed="true">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\Startup.MobileApp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.ConfigUtils" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAgAAACIAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ConfigUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.ExtendedUserInfo" Collapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAwAACAAAAAAAQAAAAAAAAAAEgAAAAAAAA=</HashCode>
+      <FileName>DataObjects\ExtendedUserInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.IDPTransaction" Collapsed="true">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAgACAAACAEAAAAAAAAAAAgAA=</HashCode>
+      <FileName>IDPTransaction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.Controllers.FriendController" Collapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAABAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\FriendController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.Controllers.HouseholdController" Collapsed="true">
+    <Position X="4.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQACAAAAAAAAAAAAAAAAAAAQUAAEAAAAACAAAAAAYAA=</HashCode>
+      <FileName>Controllers\HouseholdController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.Controllers.MessageBaseController" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAECAAAAAAAAAACAAAAAAAAAAAAAIAAAAAEAAAAAA=</HashCode>
+      <FileName>Controllers\MessageBaseController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.Controllers.MessageController" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAABAAAAAAAAQCAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\MessageController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.Controllers.RegistrationController" Collapsed="true">
+    <Position X="6.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAASAAAAAAAAAAAAAAAAAAAQCAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\RegistrationController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.Controllers.UserController" Collapsed="true">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQACAAAAAAAAAQAAAAAAAAAQAIAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\UserController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.Controllers.VoteController" Collapsed="true">
+    <Position X="8.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAACAAAAAAABAAAAAAAAAAIQAAAAAAAAAAAAAIgAAAA=</HashCode>
+      <FileName>Controllers\VoteController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.DataObjects.FacebookFriend" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>DataObjects\FacebookFriend.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.DataObjects.Friends" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\Friends.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.DataObjects.Household" Collapsed="true">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAIAAAAAAAAAAEAAQAAAAAAAggAAI=</HashCode>
+      <FileName>DataObjects\Household.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.DataObjects.HouseholdMember" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAQABgAAAAKAAAEAAAAAAAAAAIAEEACAAgAAA=</HashCode>
+      <FileName>DataObjects\HouseholdMember.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.DataObjects.Message" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAACAAAAAAAAAgAAAAAAAAAAAAAAAAAAAEAiA=</HashCode>
+      <FileName>DataObjects\Message.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.DataObjects.User" Collapsed="true">
+    <Position X="10" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABCAAAAAAAAAAAAAAAAAAAAAEAACAAAAAA=</HashCode>
+      <FileName>DataObjects\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.DataObjects.Vote" Collapsed="true">
+    <Position X="4.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAQAgAAIAIAQACAACAAAAAAQAAAAAACAgAAA=</HashCode>
+      <FileName>DataObjects\Vote.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.DataObjects.VoteCast" Collapsed="true">
+    <Position X="6.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\VoteCast.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LWalshFinalAzure.Models.MobileServiceContext" Collapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAACAAACAAAAIQAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\MobileServiceContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="LWalshFinalAzure.DataObjects.Status" Collapsed="true">
+    <Position X="3" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAIAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>DataObjects\HouseholdMember.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LWalshFinalAzure.DataObjects.VoteType" Collapsed="true">
+    <Position X="4.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAQAAAACAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>DataObjects\Vote.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

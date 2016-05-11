@@ -21,6 +21,7 @@ using Microsoft.Azure.Search.Models;
 
 namespace LWalshFinalClient
 {
+
     [Activity(Label = "Messages/Notifications")]
     public class MessageActivity : Activity
     {
