@@ -19,6 +19,7 @@ namespace LWalshFinalAzure
     {
         public static void ConfigureMobileApp(IAppBuilder app)
         {
+            //configure routing
             HttpConfiguration config = new HttpConfiguration();
             config.Routes.MapHttpRoute(
                 name: "GetMemberFromHH",
@@ -30,26 +31,11 @@ namespace LWalshFinalAzure
                 routeTemplate: "api/user/byid/{id}/friends",
                 defaults: new { controller = "friend", action = "byid", id = RouteParameter.Optional }
             );
-            //config.Routes.MapHttpRoute(
-            //    name: "HouseholdById",
-            //    routeTemplate: "api/{controller}/{action}/{hhid}",
-            //    defaults: new { hhid = RouteParameter.Optional }
-            //);
-            //config.Routes.MapHttpRoute(
-            //    name: "GetHouseholdsByUser",
-            //    routeTemplate: "api/{controller}/{action}/{userid}",
-            //    defaults: new { userid = RouteParameter.Optional }
-            //);
             config.Routes.MapHttpRoute(
                 name: "GetUser",
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-            //config.Routes.MapHttpRoute(
-            //    name: "HouseholdGetUsersApi",
-            //    routeTemplate: "api/{controller}/{action}/{id}",
-            //    defaults: new { id = RouteParameter.Optional }
-            //);
             config.Routes.MapHttpRoute(
                 name: "DefaultPost",
                 routeTemplate: "api/{controller}/{action}"
@@ -59,16 +45,11 @@ namespace LWalshFinalAzure
                 routeTemplate: "api/{controller}"                
             );
 
-            //config.Routes.MapHttpRoute(
-            //    name: "DefaultApi",
-            //    routeTemplate: "api/{controller}",
-            //    defaults: new { id = RouteParameter.Optional }
-            //);
             new MobileAppConfiguration()
                 .UseDefaultConfiguration()
                 .ApplyTo(config);
 
-            // Use Entity Framework Code First to create database tables based on your DbContext
+            // Use Entity Framework Code First to create database tables based on DbContext
             Database.SetInitializer(new MobileServiceInitializer());
 
             MobileAppSettingsDictionary settings = config.GetMobileAppSettingsProvider().GetMobileAppSettings();
@@ -95,6 +76,7 @@ namespace LWalshFinalAzure
     {
         protected override void Seed(MobileServiceContext context)
         {
+            //create list of sample users
             User me = new User
             {
                 Id = Guid.NewGuid().ToString(),
@@ -124,9 +106,11 @@ namespace LWalshFinalAzure
                 IDPUserID = "FB4"
             };
 
+            //create sample households
             Household hh1 = new Household { Id = Guid.NewGuid().ToString(), name = "Test Household1" };
             Household hh2 = new Household { Id = Guid.NewGuid().ToString(), name = "Test Household2" };
 
+            //create sample household members (many to many relationship between user and household)
             HouseholdMember member1 = new HouseholdMember()
             {
                 userId = me.Id,
@@ -187,6 +171,7 @@ namespace LWalshFinalAzure
                 isLandlordVote = false
             };
 
+            //add new users, households, and household members to the context
             me.memberships.Add(member1);
             tim.memberships.Add(member2);
             eric.memberships.Add(member3);
@@ -196,9 +181,6 @@ namespace LWalshFinalAzure
             hh2.members.Add(member2);
             hh1.members.Add(member3);
             hh1.members.Add(member4);
-
-            //hh1.users.Add(me);
-            //hh2.users.Add(me);
 
             List<User> users = new List<User>
             {
@@ -213,12 +195,10 @@ namespace LWalshFinalAzure
                 context.Set<User>().Add(u);
             }
 
-            //context.Set<HouseholdMember>().Add(member1);
-            //context.Set<HouseholdMember>().Add(member2);
-
             context.Set<Household>().Add(hh1);
             context.Set<Household>().Add(hh2);
 
+            //add a test vote
             Vote v = new Vote();
             v.Id = Guid.NewGuid().ToString();
             v.householdID = hh1.Id;
@@ -227,13 +207,13 @@ namespace LWalshFinalAzure
             v.targetMemberID = member1.Id;
             v.voteType = VoteType.Karma;
             v.votesFor = 1;
-            v.voteStatus = "Pending";
+            v.voteStatus = "In Progress";
             v.balanceChange = -100;
 
             hh1.votes.Add(v);
             member1.votes.Add(v);
             context.Set<Vote>().Add(v);
-            //context.SaveChanges();
+    
             base.Seed(context);
         }
     }
