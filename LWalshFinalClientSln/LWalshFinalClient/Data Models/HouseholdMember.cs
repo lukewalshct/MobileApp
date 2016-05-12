@@ -31,6 +31,4 @@ namespace LWalshFinalClient
         public string userId { get; set; }
         public string householdId { get; set; }
     }
-
-    //public enum Status { Approved, Declined, Pending }
 }
