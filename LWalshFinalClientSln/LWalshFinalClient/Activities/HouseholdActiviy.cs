@@ -566,8 +566,7 @@ namespace LWalshFinalClient
         /// <summary>
         /// Displays the list of household members to the user as a scrollable list. This is accomplished by using
         /// an adapter (MemberScrollAdapter) which binds the data to the listview (membersListView).
-        /// </summary>
-        /// </summary>
+        /// </summary>        
         private void displayMembers()
         {
             if (this.members != null && this.members.Count > 0)
